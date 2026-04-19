@@ -35,13 +35,17 @@
   .primary-btn:hover { opacity: 0.88; }
   .primary-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-  .verse-card { border: 1px solid #d4c9b0; border-radius: 14px; background: #fff; padding: 1.25rem 1.25rem 1rem; margin-bottom: 14px; cursor: pointer; transition: all 0.15s; }
+  .verse-card { border: 1px solid #d4c9b0; border-radius: 14px; background: #fff; padding: 1.25rem 1.25rem 1rem; margin-bottom: 14px; cursor: pointer; transition: all 0.15s; position: relative; }
   .verse-card:hover { border-color: #3B6D11; background: #f8fcf5; }
   .verse-card.selected { border: 2px solid #3B6D11; background: #f0f8e8; }
-  .verse-ref { font-size: 12px; font-weight: 700; color: #3B6D11; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; font-family: Arial, sans-serif; }
+  .verse-ref { font-size: 12px; font-weight: 700; color: #3B6D11; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; font-family: Arial, sans-serif; padding-right: 40px; }
   .verse-text { font-size: 15px; color: #2c1e0f; line-height: 1.75; font-style: italic; margin-bottom: 12px; border-left: 3px solid #c8deb0; padding-left: 12px; }
   .verse-reason-label { font-size: 11px; font-weight: 700; color: #7a6a50; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 5px; font-family: Arial, sans-serif; }
   .verse-reason { font-size: 13px; color: #5a4a35; line-height: 1.65; }
+
+  .verse-share-btn { position: absolute; top: 10px; right: 10px; width: 36px; height: 36px; border-radius: 50%; border: 1px solid #d4c9b0; background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; padding: 0; }
+  .verse-share-btn:hover { background: #eaf3de; border-color: #3B6D11; }
+  .verse-share-btn svg { display: block; }
 
   .loading-state { text-align: center; padding: 4rem 1rem; }
   .cross-anim { font-size: 42px; color: #3B6D11; animation: pulse 1.6s ease-in-out infinite; display: block; }
@@ -65,12 +69,6 @@
 
   .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #2c4a1e; color: #f0f8e8; padding: 12px 20px; border-radius: 10px; font-size: 13px; font-family: Georgia, serif; box-shadow: 0 6px 18px rgba(0,0,0,0.18); opacity: 0; pointer-events: none; transition: opacity 0.25s; z-index: 999; }
   .toast.show { opacity: 1; }
-
-  /* Per-card share icon */
-  .verse-card { position: relative; }
-  .verse-share-btn { position: absolute; top: 10px; right: 10px; width: 36px; height: 36px; border-radius: 50%; border: 1px solid #d4c9b0; background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; padding: 0; }
-  .verse-share-btn:hover { background: #eaf3de; border-color: #3B6D11; }
-  .verse-share-btn svg { display: block; }
 
   /* Share sheet overlay */
   .share-sheet { position: fixed; inset: 0; display: none; align-items: flex-end; justify-content: center; z-index: 1000; }
@@ -237,11 +235,6 @@
    ====================================================================== */
 
 // ---- Curated KJV verse bank -----------------------------------------------
-// Each verse has:
-//   ref     : reference that bible-api.com can resolve (KJV)
-//   reason  : warm 2-3 sentence explanation of why this verse fits the mood
-//   themes  : optional tags used to boost verses when the user's context
-//             mentions those life situations
 const VERSE_BANK = {
   Anxious: [
     { ref: "Philippians 4:6-7",
@@ -375,8 +368,6 @@ const VERSE_BANK = {
   ]
 };
 
-// ---- Context keyword -> theme mapping ------------------------------------
-// Used to bias which verses float to the top when the user shares context.
 const THEME_KEYWORDS = {
   fear:      ["afraid","scared","scary","fear","terrified","panic","anxious","anxiety","worried","worry","nervous"],
   health:    ["sick","cancer","illness","ill","hospital","diagnosis","disease","pain","surgery","tumor","treatment","chemo","doctor","covid"],
@@ -390,11 +381,9 @@ const THEME_KEYWORDS = {
   suffering: ["suffering","hard","struggle","struggling","exhausted","tired","overwhelmed","depressed","depression"]
 };
 
-// ---- State ----------------------------------------------------------------
 let selectedMood = '';
 let selectedVerse = null;
 
-// ---- Screen navigation ----------------------------------------------------
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
@@ -408,7 +397,6 @@ function selectMood(btn, mood) {
   document.getElementById('mood-error').style.display = 'none';
 }
 
-// ---- Intelligence layer ---------------------------------------------------
 function detectThemes(text) {
   const lower = (text || '').toLowerCase();
   if (!lower) return [];
@@ -435,25 +423,18 @@ function pickThreeVerses(mood, context) {
   if (pool.length === 0) return [];
 
   const themes = detectThemes(context);
-
-  // Split the pool by whether any of its themes match the detected themes.
-  // We prefer themed matches first, then fill in from the general pool,
-  // shuffling within each bucket so repeat visits feel fresh.
   const themed = shuffle(pool.filter(v => (v.themes||[]).some(t => themes.includes(t))));
   const general = shuffle(pool.filter(v => !themed.includes(v)));
 
   const picks = [];
-  // Take up to 2 themed if we have any, to keep variety
   const maxThemed = themes.length > 0 ? Math.min(2, themed.length) : 0;
   for (let i = 0; i < maxThemed && picks.length < 3; i++) picks.push(themed[i]);
   for (let i = 0; picks.length < 3 && i < general.length; i++) picks.push(general[i]);
-  // Edge case: if general wasn't enough (small pool), fall back to remaining themed
   for (let i = maxThemed; picks.length < 3 && i < themed.length; i++) picks.push(themed[i]);
 
   return picks;
 }
 
-// ---- Fetch verse text from bible-api.com (KJV) ----------------------------
 async function fetchVerseText(reference) {
   const encoded = encodeURIComponent(reference);
   const res = await fetch(`https://bible-api.com/${encoded}?translation=kjv`);
@@ -466,7 +447,6 @@ async function fetchVerseText(reference) {
   };
 }
 
-// ---- Main flow ------------------------------------------------------------
 const LOADING_MESSAGES = [
   'Shepherd is searching Scripture for you...',
   'Listening to what you shared...',
@@ -481,7 +461,6 @@ async function getVerses() {
   const context = document.getElementById('user-context').value.trim();
   showScreen('screen-loading');
 
-  // Cycle loading messages for a sense of motion
   const loadingEl = document.getElementById('loading-text');
   let msgIdx = 0;
   loadingEl.textContent = LOADING_MESSAGES[0];
@@ -494,8 +473,6 @@ async function getVerses() {
     const chosen = pickThreeVerses(selectedMood, context);
     if (chosen.length === 0) throw new Error('No verses available for this mood.');
 
-    // A small artificial minimum delay makes the loading state feel meaningful
-    // rather than flashing by.
     const fetchPromise = Promise.all(chosen.map(async (v) => {
       const scripture = await fetchVerseText(v.ref);
       return { reference: scripture.reference, text: scripture.text, reason: v.reason };
@@ -529,7 +506,6 @@ function renderVerses(verses) {
     const card = document.createElement('div');
     card.className = 'verse-card';
 
-    // Quick-share icon (top-right)
     const shareBtn = document.createElement('button');
     shareBtn.className = 'verse-share-btn';
     shareBtn.setAttribute('aria-label', 'Share this verse');
@@ -559,7 +535,6 @@ function renderVerses(verses) {
   });
 }
 
-// ---- Share screen ---------------------------------------------------------
 function goToShare() {
   if (!selectedVerse) return;
   document.getElementById('share-ref').textContent = selectedVerse.reference;
@@ -568,13 +543,6 @@ function goToShare() {
 }
 
 // ---- Share flow (image generation + native share) -----------------------
-//
-// When the user taps the share icon on a card, we open a bottom-sheet with
-// format options (post / story / copy text). The chosen format is rendered
-// as a PNG using HTML Canvas and handed to the platform via the Web Share
-// API. On devices that can't share files (desktop, older browsers), the
-// image is offered as a download and the share-sheet instructs the user.
-
 let pendingShareVerse = null;
 
 function openShareSheet(verse) {
@@ -590,7 +558,6 @@ function closeShareSheet() {
 }
 
 function onShareSheetClick(e) {
-  // Clicking the backdrop (anything that isn't the panel) closes the sheet
   if (e.target === e.currentTarget ||
       e.target.classList.contains('share-sheet-backdrop')) {
     closeShareSheet();
@@ -598,7 +565,6 @@ function onShareSheetClick(e) {
 }
 
 function shareFromReflect(format) {
-  // Called from the "Reflect & Share" screen buttons. Uses selectedVerse.
   if (!selectedVerse) return;
   pendingShareVerse = selectedVerse;
   doShare(format);
@@ -643,15 +609,13 @@ async function doShare(format) {
         closeShareSheet();
         return;
       } catch (err) {
-        // User cancelled the share sheet, or it failed — fall through to download
         if (err && err.name === 'AbortError') {
           setShareButtonsBusy(false);
-          return; // just leave the sheet open so they can pick again
+          return;
         }
       }
     }
 
-    // Fallback: download the image
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -678,27 +642,22 @@ async function generateVerseImage(verse, format) {
   canvas.height = H;
   const ctx = canvas.getContext('2d');
 
-  // Base background — soft cream
   ctx.fillStyle = '#faf5ed';
   ctx.fillRect(0, 0, W, H);
 
-  // Subtle inner frame
   ctx.strokeStyle = '#e4d8bd';
   ctx.lineWidth = 2;
   roundRect(ctx, 48, 48, W - 96, H - 96, 28);
   ctx.stroke();
 
-  // Cross glyph at top
   const crossCY = format === 'story' ? 280 : 220;
   drawCross(ctx, W / 2, crossCY, 100);
 
-  // Reference label (green, small caps, letter-spaced)
   const refY = crossCY + 120;
   ctx.fillStyle = '#3B6D11';
   ctx.font = 'bold 32px Arial, Helvetica, sans-serif';
   drawLetterSpaced(ctx, verse.reference.toUpperCase(), W / 2, refY, 5);
 
-  // Decorative short underline
   ctx.strokeStyle = '#c8deb0';
   ctx.lineWidth = 2;
   ctx.beginPath();
@@ -706,7 +665,6 @@ async function generateVerseImage(verse, format) {
   ctx.lineTo(W / 2 + 42, refY + 28);
   ctx.stroke();
 
-  // Verse text — auto-fit so long passages still look balanced
   const textTop = refY + 80;
   const footerTop = H - 220;
   const availableH = footerTop - textTop;
@@ -725,7 +683,6 @@ async function generateVerseImage(verse, format) {
     ctx.fillText(line, W / 2, startY + i * fit.lineHeight);
   });
 
-  // Footer divider
   ctx.strokeStyle = '#e4d8bd';
   ctx.lineWidth = 1;
   ctx.beginPath();
@@ -733,13 +690,11 @@ async function generateVerseImage(verse, format) {
   ctx.lineTo(W / 2 + 90, footerTop + 30);
   ctx.stroke();
 
-  // Watermark — SHEPHERD
   ctx.fillStyle = '#2c4a1e';
   ctx.font = 'bold 38px Georgia, serif';
   ctx.textBaseline = 'alphabetic';
   drawLetterSpaced(ctx, 'SHEPHERD', W / 2, footerTop + 90, 6);
 
-  // Tagline
   ctx.fillStyle = '#7a6a50';
   ctx.font = 'italic 22px Georgia, serif';
   ctx.textAlign = 'center';
@@ -755,12 +710,10 @@ function drawCross(ctx, cx, cy, size) {
   ctx.lineWidth = 7;
   ctx.lineCap = 'round';
   const half = size / 2;
-  // Vertical stem
   ctx.beginPath();
   ctx.moveTo(cx, cy - half);
   ctx.lineTo(cx, cy + half);
   ctx.stroke();
-  // Horizontal arm (positioned upper third, matching app glyph)
   const armY = cy - half + size * 0.32;
   const armSpan = size * 0.42;
   ctx.beginPath();
@@ -770,7 +723,6 @@ function drawCross(ctx, cx, cy, size) {
 }
 
 function drawLetterSpaced(ctx, text, cx, y, spacing) {
-  // Canvas doesn't have letter-spacing, so draw each character manually
   const chars = Array.from(text);
   const widths = chars.map(c => ctx.measureText(c).width);
   const total = widths.reduce((a,b) => a + b, 0) + spacing * (chars.length - 1);
@@ -802,7 +754,6 @@ function wrapText(ctx, text, maxWidth) {
 }
 
 function fitVerseText(ctx, text, maxW, maxH) {
-  // Shrinks font until the wrapped text fits within maxW x maxH
   for (let size = 58; size >= 28; size -= 2) {
     ctx.font = 'italic ' + size + 'px Georgia, "Times New Roman", serif';
     const lines = wrapText(ctx, text, maxW);
@@ -811,7 +762,6 @@ function fitVerseText(ctx, text, maxW, maxH) {
       return { lines, fontSize: size, lineHeight };
     }
   }
-  // Bottom-out: smallest size we allow
   const size = 28;
   ctx.font = 'italic ' + size + 'px Georgia, serif';
   return {
@@ -835,7 +785,6 @@ function copyToClipboard(text) {
   if (navigator.clipboard && navigator.clipboard.writeText) {
     return navigator.clipboard.writeText(text).then(() => true).catch(() => false);
   }
-  // Fallback for older browsers / non-secure contexts (like file:// in some browsers)
   try {
     const ta = document.createElement('textarea');
     ta.value = text;
@@ -858,7 +807,6 @@ function showToast(message) {
   setTimeout(() => t.classList.remove('show'), 2600);
 }
 
-// ---- Reset ----------------------------------------------------------------
 function restart() {
   selectedMood = '';
   selectedVerse = null;

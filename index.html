@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shepard — Let His word guide you</title>
+<meta name="description" content="Shepard helps you find King James Bible verses that speak to how you're feeling.">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Georgia, serif; background: #f5f0e8; min-height: 100vh; display: flex; align-items: flex-start; justify-content: center; padding: 1rem; }
+  #app { max-width: 420px; width: 100%; }
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  .logo-area { text-align: center; padding: 2.5rem 0 1.5rem; }
+  .app-title { font-size: 30px; font-weight: 700; color: #2c4a1e; letter-spacing: 4px; font-family: Georgia, serif; }
+  .app-tagline { font-size: 14px; color: #7a6a50; margin-top: 6px; font-style: italic; }
+  .staff-glyph { font-size: 52px; display: block; margin-bottom: 0.5rem; color: #3B6D11; }
+
+  .section-label { font-size: 13px; color: #7a6a50; margin-bottom: 8px; font-family: Georgia, serif; }
+  .intro-text { font-size: 15px; color: #5a4a35; text-align: center; line-height: 1.8; margin-bottom: 2rem; font-style: italic; }
+
+  .mood-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 1.5rem 0 10px; }
+  .mood-btn { padding: 1rem; border: 1px solid #d4c9b0; border-radius: 12px; background: #fff; cursor: pointer; text-align: center; transition: all 0.15s; font-family: Georgia, serif; }
+  .mood-btn:hover { background: #f0ebe0; border-color: #b0a080; }
+  .mood-btn.selected { border: 2px solid #3B6D11; background: #eaf3de; }
+  .mood-btn .mood-label { font-size: 14px; font-weight: 600; color: #2c4a1e; margin-top: 6px; display: block; }
+  .mood-icon { display: block; margin: 0 auto 6px; }
+
+  textarea { width: 100%; padding: 12px; border: 1px solid #d4c9b0; border-radius: 10px; background: #fff; color: #3a2e1e; font-family: Georgia, serif; font-size: 14px; line-height: 1.7; resize: none; margin-top: 4px; }
+  textarea:focus { outline: none; border-color: #3B6D11; }
+  textarea::placeholder { color: #b0a080; font-style: italic; }
+
+  .primary-btn { width: 100%; padding: 14px; background: #3B6D11; color: #f0f8e8; border: none; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 1rem; font-family: Georgia, serif; letter-spacing: 1px; transition: opacity 0.15s; }
+  .primary-btn:hover { opacity: 0.88; }
+  .primary-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .verse-card { border: 1px solid #d4c9b0; border-radius: 14px; background: #fff; padding: 1.25rem 1.25rem 1rem; margin-bottom: 14px; cursor: pointer; transition: all 0.15s; }
+  .verse-card:hover { border-color: #3B6D11; background: #f8fcf5; }
+  .verse-card.selected { border: 2px solid #3B6D11; background: #f0f8e8; }
+  .verse-ref { font-size: 12px; font-weight: 700; color: #3B6D11; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; font-family: Arial, sans-serif; }
+  .verse-text { font-size: 15px; color: #2c1e0f; line-height: 1.75; font-style: italic; margin-bottom: 12px; border-left: 3px solid #c8deb0; padding-left: 12px; }
+  .verse-reason-label { font-size: 11px; font-weight: 700; color: #7a6a50; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 5px; font-family: Arial, sans-serif; }
+  .verse-reason { font-size: 13px; color: #5a4a35; line-height: 1.65; }
+
+  .loading-state { text-align: center; padding: 4rem 1rem; }
+  .cross-anim { font-size: 42px; color: #3B6D11; animation: pulse 1.6s ease-in-out infinite; display: block; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.92)} }
+  .loading-text { font-size: 14px; color: #7a6a50; margin-top: 1.2rem; font-style: italic; }
+
+  .share-card { border: 1px solid #d4c9b0; border-radius: 14px; background: #fff; padding: 1.75rem 1.5rem; text-align: center; margin-bottom: 1.25rem; }
+  .share-verse-ref { font-size: 12px; font-weight: 700; color: #3B6D11; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; font-family: Arial, sans-serif; }
+  .share-verse-text { font-size: 16px; color: #2c1e0f; line-height: 1.8; font-style: italic; margin-bottom: 20px; }
+  .share-watermark { font-size: 11px; color: #b0a080; letter-spacing: 2px; border-top: 1px solid #e8e0d0; padding-top: 12px; font-family: Arial, sans-serif; }
+
+  .share-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 1rem; }
+  .share-btn { padding: 13px; border: 1px solid #d4c9b0; border-radius: 10px; background: #fff; color: #2c4a1e; font-size: 14px; font-weight: 600; cursor: pointer; font-family: Georgia, serif; transition: background 0.12s; }
+  .share-btn:hover { background: #f0ebe0; }
+  .share-btn.full { grid-column: span 2; }
+
+  .back-btn { background: none; border: none; color: #7a6a50; font-size: 13px; cursor: pointer; padding: 0 0 1rem; display: flex; align-items: center; gap: 4px; font-family: Georgia, serif; font-style: italic; }
+  .error-msg { font-size: 13px; color: #8b2020; background: #fdf0f0; border: 1px solid #e8c0c0; border-radius: 8px; padding: 10px 14px; margin-top: 10px; }
+  .mini-header { display: flex; align-items: center; justify-content: center; padding: 1.25rem 0 0.75rem; border-bottom: 1px solid #e0d8c8; margin-bottom: 1.25rem; }
+  .mini-title { font-size: 18px; font-weight: 700; color: #2c4a1e; letter-spacing: 3px; font-family: Georgia, serif; }
+
+  .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #2c4a1e; color: #f0f8e8; padding: 12px 20px; border-radius: 10px; font-size: 13px; font-family: Georgia, serif; box-shadow: 0 6px 18px rgba(0,0,0,0.18); opacity: 0; pointer-events: none; transition: opacity 0.25s; z-index: 999; }
+  .toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- Welcome -->
+  <div id="screen-welcome" class="screen active">
+    <div class="logo-area">
+      <svg width="52" height="62" viewBox="0 0 52 62" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block;margin:0 auto 0.5rem;">
+        <line x1="26" y1="2" x2="26" y2="60" stroke="#3B6D11" stroke-width="3" stroke-linecap="round"/>
+        <line x1="10" y1="18" x2="42" y2="18" stroke="#3B6D11" stroke-width="3" stroke-linecap="round"/>
+        <path d="M26 58 Q22 54 20 50" stroke="#3B6D11" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+      </svg>
+      <div class="app-title">SHEPARD</div>
+      <div class="app-tagline">Let His word guide you</div>
+    </div>
+    <p class="intro-text">Select your mood, share what's on your heart,<br>and receive Scripture chosen just for you.</p>
+    <button class="primary-btn" onclick="showScreen('screen-mood')">Begin</button>
+  </div>
+
+  <!-- Mood -->
+  <div id="screen-mood" class="screen">
+    <div class="mini-header"><span class="mini-title">SHEPARD</span></div>
+    <p class="section-label">How are you feeling today?</p>
+    <div class="mood-grid">
+      <button class="mood-btn" onclick="selectMood(this,'Anxious')">
+        <svg class="mood-icon" width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="18" cy="18" r="15" stroke="#3B6D11" stroke-width="1.5"/>
+          <path d="M11 14c0-1.1.9-2 2-2s2 .9 2 2" stroke="#3B6D11" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M21 14c0-1.1.9-2 2-2s2 .9 2 2" stroke="#3B6D11" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M12 23c1.5-1.5 3.5-2 6-2s4.5.5 6 2" stroke="#3B6D11" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M18 8v3M18 25v3" stroke="#3B6D11" stroke-width="1.2" stroke-linecap="round" opacity="0.4"/>
+        </svg>
+        <span class="mood-label">Anxious</span>
+      </button>
+      <button class="mood-btn" onclick="selectMood(this,'Grieving')">
+        <svg class="mood-icon" width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M18 30C18 30 6 22 6 14a8 8 0 0 1 12-6.93A8 8 0 0 1 30 14c0 8-12 16-12 16z" stroke="#3B6D11" stroke-width="1.5" stroke-linejoin="round"/>
+          <path d="M18 30C18 30 6 22 6 14a8 8 0 0 1 12-6.93" stroke="#3B6D11" stroke-width="1.5" stroke-linecap="round" opacity="0.3"/>
+          <line x1="18" y1="16" x2="18" y2="22" stroke="#3B6D11" stroke-width="1.4" stroke-linecap="round"/>
+          <circle cx="18" cy="14" r="1.2" fill="#3B6D11"/>
+        </svg>
+        <span class="mood-label">Grieving</span>
+      </button>
+      <button class="mood-btn" onclick="selectMood(this,'Hopeful')">
+        <svg class="mood-icon" width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="18" cy="20" r="10" stroke="#3B6D11" stroke-width="1.5"/>
+          <path d="M8 20H4M32 20h-4M18 10V6M26.5 11.5l2.8-2.8M9.5 11.5L6.7 8.7" stroke="#3B6D11" stroke-width="1.4" stroke-linecap="round"/>
+          <path d="M13 20a5 5 0 0 1 10 0" stroke="#3B6D11" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+        <span class="mood-label">Hopeful</span>
+      </button>
+      <button class="mood-btn" onclick="selectMood(this,'Lost')">
+        <svg class="mood-icon" width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="18" cy="18" r="14" stroke="#3B6D11" stroke-width="1.5" stroke-dasharray="3 3"/>
+          <circle cx="18" cy="18" r="2" fill="#3B6D11"/>
+          <path d="M18 8v4M18 24v4M8 18h4M24 18h4" stroke="#3B6D11" stroke-width="1.4" stroke-linecap="round" opacity="0.4"/>
+          <path d="M14 18h8" stroke="#3B6D11" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M16 15l2 3-2 3" stroke="#3B6D11" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/>
+        </svg>
+        <span class="mood-label">Lost</span>
+      </button>
+    </div>
+    <button class="mood-btn" style="width:100%;margin-bottom:1.25rem;" onclick="selectMood(this,'Grateful')">
+      <svg class="mood-icon" width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M18 6v24M6 18h24" stroke="#3B6D11" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="18" cy="18" r="6" stroke="#3B6D11" stroke-width="1.3" opacity="0.35"/>
+      </svg>
+      <span class="mood-label">Grateful</span>
+    </button>
+    <p class="section-label">Want to share what's on your heart? <em style="opacity:0.6">(optional)</em></p>
+    <textarea id="user-context" rows="4" placeholder="e.g. My mother was just diagnosed with cancer and I'm scared about what's ahead..."></textarea>
+    <div id="mood-error" class="error-msg" style="display:none;">Please select a mood before continuing.</div>
+    <button class="primary-btn" onclick="getVerses()">Find My Verses</button>
+  </div>
+
+  <!-- Loading -->
+  <div id="screen-loading" class="screen">
+    <div class="loading-state">
+      <svg class="cross-anim" width="48" height="56" viewBox="0 0 48 56" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block;margin:0 auto;">
+        <line x1="24" y1="2" x2="24" y2="54" stroke="#3B6D11" stroke-width="3" stroke-linecap="round"/>
+        <line x1="8" y1="16" x2="40" y2="16" stroke="#3B6D11" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+      <div class="loading-text" id="loading-text">Shepard is searching Scripture for you...</div>
+    </div>
+  </div>
+
+  <!-- Verses -->
+  <div id="screen-verses" class="screen">
+    <div class="mini-header"><span class="mini-title">SHEPARD</span></div>
+    <p class="section-label" style="margin-bottom:1rem;">Three verses chosen for you. Select the one that speaks to your heart.</p>
+    <div id="verses-container"></div>
+    <button class="primary-btn" id="reflect-btn" onclick="goToShare()" style="display:none;">Reflect &amp; Share ›</button>
+    <div id="verses-error" class="error-msg" style="display:none;"></div>
+    <button class="back-btn" style="margin-top:1rem;" onclick="showScreen('screen-mood')">← Start over</button>
+  </div>
+
+  <!-- Share -->
+  <div id="screen-share" class="screen">
+    <div class="mini-header"><span class="mini-title">SHEPARD</span></div>
+    <button class="back-btn" onclick="showScreen('screen-verses')">← Back to verses</button>
+    <div class="share-card">
+      <div class="share-verse-ref" id="share-ref"></div>
+      <div class="share-verse-text" id="share-text"></div>
+      <div class="share-watermark">— SHEPARD · Let His word guide you</div>
+    </div>
+    <div class="share-btns">
+      <button class="share-btn" onclick="shareVerse('facebook')">Share to Facebook</button>
+      <button class="share-btn" onclick="shareVerse('instagram')">Share to Instagram</button>
+      <button class="share-btn full" onclick="shareVerse('copy')">Copy Verse</button>
+    </div>
+    <button class="primary-btn" style="margin-top:1rem;background:#5a4a35;" onclick="restart()">Start Over</button>
+  </div>
+
+  <div class="toast" id="toast"></div>
+</div>
+
+<script>
+/* ======================================================================
+   SHEPARD — Scripture guidance by mood
+   ----------------------------------------------------------------------
+   Initial concept build. This version uses a curated KJV verse bank
+   mapped to each mood, with light context-keyword matching to make the
+   selection feel personal. Actual verse text is fetched live from the
+   bible-api.com King James translation so Scripture stays authoritative.
+   ====================================================================== */
+
+// ---- Curated KJV verse bank -----------------------------------------------
+// Each verse has:
+//   ref     : reference that bible-api.com can resolve (KJV)
+//   reason  : warm 2-3 sentence explanation of why this verse fits the mood
+//   themes  : optional tags used to boost verses when the user's context
+//             mentions those life situations
+const VERSE_BANK = {
+  Anxious: [
+    { ref: "Philippians 4:6-7",
+      reason: "When anxiety presses in, Paul invites you to lay every worry before God with thanksgiving. The promise that follows isn't the removal of trouble — it's a peace that guards your heart even when circumstances don't change.",
+      themes: ["worry","prayer"] },
+    { ref: "Isaiah 41:10",
+      reason: "Fear shrinks the world down to whatever is threatening you right now. This verse widens it again — reminding you that the God who holds the universe is also holding your hand today.",
+      themes: ["fear"] },
+    { ref: "1 Peter 5:7",
+      reason: "You don't have to carry what you're carrying alone. The invitation here is to hand it off, piece by piece — not because the concern doesn't matter, but because He cares for you personally.",
+      themes: ["worry","burden"] },
+    { ref: "Matthew 6:34",
+      reason: "Anxiety almost always lives in tomorrow. Jesus gently pulls you back to today and promises that grace will be there when tomorrow actually arrives.",
+      themes: ["future","worry"] },
+    { ref: "John 14:27",
+      reason: "The peace Jesus offers isn't the kind that depends on everything going right. It's a peace given in the middle of uncertainty — specifically so your heart wouldn't be troubled or afraid.",
+      themes: ["fear","peace"] },
+    { ref: "2 Timothy 1:7",
+      reason: "Fear is loud, but it doesn't get to define you. Paul reminds you that what's actually been given to you is power, love, and a sound mind — a quiet identity that fear cannot take.",
+      themes: ["fear","identity"] },
+    { ref: "Psalm 94:19",
+      reason: "When your thoughts are racing and multiplying inside you, this verse is honest about that experience — and points to the comforts of God that steady an overwhelmed mind.",
+      themes: ["worry","thoughts"] },
+    { ref: "Proverbs 3:5-6",
+      reason: "Much of anxiety is the exhaustion of trying to figure everything out yourself. These verses are an invitation to lean your weight on someone whose understanding is bigger than yours.",
+      themes: ["trust","future"] }
+  ],
+  Grieving: [
+    { ref: "Psalm 34:18",
+      reason: "Grief can feel like God has gone silent, but this verse says the opposite — He draws nearer to broken hearts, not further away. You're not alone in this, even when it feels like it.",
+      themes: ["loss","broken"] },
+    { ref: "Matthew 5:4",
+      reason: "Jesus doesn't rush past sorrow or tell you to move on. He calls mourners blessed and promises comfort — not as a platitude, but as a real thing that meets you in your tears.",
+      themes: ["loss","mourning"] },
+    { ref: "Revelation 21:4",
+      reason: "This is the promise Christians hold in grief: that tears, death, sorrow, and pain are temporary. One day God Himself will wipe away every tear — and the reunion you're longing for will be real.",
+      themes: ["death","hope","eternity"] },
+    { ref: "John 14:1-3",
+      reason: "Jesus spoke these words to friends about to lose Him. He doesn't deny the pain — He points past it to a prepared place and a reunion that grief cannot undo.",
+      themes: ["death","hope","family"] },
+    { ref: "Psalm 147:3",
+      reason: "A short verse that carries a lot. God heals the broken-hearted; He binds up their wounds. Not dismisses them, not minimizes them — binds them up, gently, over time.",
+      themes: ["broken","healing"] },
+    { ref: "2 Corinthians 1:3-4",
+      reason: "The God of all comfort meets you in this, and one day the comfort you receive now will become comfort you pass on to someone else walking through their own loss.",
+      themes: ["loss","comfort"] },
+    { ref: "John 11:25-26",
+      reason: "At Lazarus's tomb, Jesus made the boldest claim anyone has ever made about death. For those who trust Him, grief is real — but it is not the final word.",
+      themes: ["death","hope","eternity"] },
+    { ref: "Lamentations 3:22-23",
+      reason: "Even in a book of lament, this verse breaks through: His mercies are new every morning. Grief comes in waves, and so does grace — fresh for whatever today holds.",
+      themes: ["mourning","mercy"] }
+  ],
+  Hopeful: [
+    { ref: "Jeremiah 29:11",
+      reason: "A verse worth reading slowly. God's thoughts toward you are thoughts of peace, not evil — an expected end, a future. Hope isn't wishful thinking; it's trust in the One planning ahead for you.",
+      themes: ["future","plans"] },
+    { ref: "Romans 15:13",
+      reason: "The God of hope fills you with joy and peace in believing — so that your hope can actually abound. This is hope that grows, not shrinks, the longer you walk with Him.",
+      themes: ["faith","joy"] },
+    { ref: "Romans 8:28",
+      reason: "This isn't a promise that everything is good — it's a promise that God is working all of it together for good. The hard parts of your story are not wasted in His hands.",
+      themes: ["trust","future","suffering"] },
+    { ref: "Isaiah 40:31",
+      reason: "Hope in Scripture is tied to waiting — and waiting well renews your strength. Eagles' wings, running without weariness, walking without fainting — that's the promise for those who keep their eyes on Him.",
+      themes: ["strength","waiting"] },
+    { ref: "Hebrews 11:1",
+      reason: "A definition worth memorizing: faith is the substance of things hoped for. What you hope for isn't unreal — it's real enough that faith treats it as substance today.",
+      themes: ["faith"] },
+    { ref: "1 Peter 1:3",
+      reason: "Peter calls it 'a lively hope' — a hope that is alive, not theoretical. It's grounded in the resurrection of Jesus, the strongest evidence there is that death does not have the last word.",
+      themes: ["resurrection","faith"] },
+    { ref: "Psalm 27:14",
+      reason: "Wait on the LORD. Be of good courage. Wait, I say, on the LORD. Twice the psalmist repeats it — because hope takes practice, and courage grows while we're still waiting.",
+      themes: ["waiting","courage"] },
+    { ref: "Romans 5:3-5",
+      reason: "Paul traces the strange path hope takes: tribulation produces patience, patience produces experience, experience produces hope — and hope does not make us ashamed.",
+      themes: ["suffering","perseverance"] }
+  ],
+  Lost: [
+    { ref: "Proverbs 3:5-6",
+      reason: "When the path ahead isn't clear, the invitation isn't to figure it all out — it's to trust, to lean, and in every step to acknowledge Him. The promise is that He will direct your paths.",
+      themes: ["direction","trust"] },
+    { ref: "Psalm 119:105",
+      reason: "God rarely gives floodlights on the whole road. His word is a lamp — enough light for the next step, and then the next. That's usually all you need to keep walking.",
+      themes: ["direction","word"] },
+    { ref: "John 14:6",
+      reason: "When you feel lost, this verse cuts through the noise. Jesus doesn't just point to a way — He says He is the way. Finding Him is, in the deepest sense, finding yourself.",
+      themes: ["direction","identity"] },
+    { ref: "Psalm 32:8",
+      reason: "A tender promise from God Himself: I will instruct thee and teach thee in the way which thou shalt go: I will guide thee with mine eye. You are being watched over, not left to wander.",
+      themes: ["direction","guidance"] },
+    { ref: "James 1:5",
+      reason: "If you don't know what to do — ask. God gives wisdom liberally and doesn't shame you for needing it. That alone should make asking easier.",
+      themes: ["wisdom","decision"] },
+    { ref: "Isaiah 30:21",
+      reason: "You won't always see the way forward before you take the step. Often God's guidance comes like a voice behind you — 'this is the way, walk ye in it' — after you've already started moving.",
+      themes: ["direction","guidance"] },
+    { ref: "Luke 15:4-6",
+      reason: "The parable of the lost sheep is Jesus's own answer to feeling lost. The shepherd doesn't wait for the sheep to find its way home — He goes looking. That's the God you belong to.",
+      themes: ["identity","belonging"] },
+    { ref: "Psalm 23:1-3",
+      reason: "The most famous shepherd passage in the Bible is for moments exactly like this one. He leads. He restores. He makes you lie down when you need it most. You are being shepherded, even when you feel lost.",
+      themes: ["direction","identity","rest"] }
+  ],
+  Grateful: [
+    { ref: "Psalm 100:4-5",
+      reason: "Thanksgiving is the gate, praise is the courts — that's the posture this psalm invites you into. Gratitude isn't just a feeling; it's a way of approaching God.",
+      themes: ["praise","thanksgiving"] },
+    { ref: "1 Thessalonians 5:16-18",
+      reason: "Rejoice evermore. Pray without ceasing. In every thing give thanks. Three short commands that, taken together, describe a heart that has learned the rhythm of gratitude.",
+      themes: ["thanksgiving","joy"] },
+    { ref: "Philippians 4:4",
+      reason: "Paul wrote this from prison. The rejoicing he calls you to isn't based on circumstances — it's based on the Lord, who doesn't change when your circumstances do.",
+      themes: ["joy","praise"] },
+    { ref: "Psalm 118:24",
+      reason: "Today is the day the LORD has made. Not yesterday, not tomorrow — today. Gratitude begins by noticing the gift you've already been given: this day, this breath, this moment.",
+      themes: ["thanksgiving","today"] },
+    { ref: "James 1:17",
+      reason: "Every good gift comes down from the Father of lights. When your heart is full of thanks, this verse is worth pausing on — tracing the good back upstream to its source.",
+      themes: ["gifts","praise"] },
+    { ref: "Psalm 107:1",
+      reason: "A simple, foundational verse of thanksgiving: He is good, and His mercy endures forever. When you're feeling grateful, sometimes the simplest words are the truest.",
+      themes: ["mercy","praise"] },
+    { ref: "Ephesians 5:20",
+      reason: "Giving thanks always for all things — this is Paul's picture of a life shaped by gratitude. Not thanks for the easy things only, but thanks woven through every part of life.",
+      themes: ["thanksgiving","worship"] },
+    { ref: "Psalm 9:1",
+      reason: "I will praise thee, O LORD, with my whole heart; I will shew forth all thy marvellous works. When gratitude rises in you, let it be loud, whole-hearted, and specific.",
+      themes: ["praise"] }
+  ]
+};
+
+// ---- Context keyword -> theme mapping ------------------------------------
+// Used to bias which verses float to the top when the user shares context.
+const THEME_KEYWORDS = {
+  fear:      ["afraid","scared","scary","fear","terrified","panic","anxious","anxiety","worried","worry","nervous"],
+  health:    ["sick","cancer","illness","ill","hospital","diagnosis","disease","pain","surgery","tumor","treatment","chemo","doctor","covid"],
+  death:     ["died","death","passed","funeral","loss","grieving","mourning","widow","widower"],
+  family:    ["mother","mom","father","dad","parent","child","children","son","daughter","husband","wife","spouse","marriage","brother","sister","family","son's","daughter's"],
+  finance:   ["money","job","work","fired","laid off","bills","debt","poor","afford","rent","mortgage","unemployed","paycheck"],
+  future:    ["future","tomorrow","ahead","what's next","uncertain","unknown","next step"],
+  direction: ["lost","direction","purpose","calling","decision","choose","career","move","stuck"],
+  relationship:["friend","friendship","relationship","alone","lonely","betrayed","hurt","breakup","divorce"],
+  faith:     ["faith","doubt","pray","prayer","sin","forgive","forgiveness","church","god","jesus"],
+  suffering: ["suffering","hard","struggle","struggling","exhausted","tired","overwhelmed","depressed","depression"]
+};
+
+// ---- State ----------------------------------------------------------------
+let selectedMood = '';
+let selectedVerse = null;
+
+// ---- Screen navigation ----------------------------------------------------
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function selectMood(btn, mood) {
+  document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedMood = mood;
+  document.getElementById('mood-error').style.display = 'none';
+}
+
+// ---- Intelligence layer ---------------------------------------------------
+function detectThemes(text) {
+  const lower = (text || '').toLowerCase();
+  if (!lower) return [];
+  const matched = new Set();
+  for (const [theme, kws] of Object.entries(THEME_KEYWORDS)) {
+    for (const kw of kws) {
+      if (lower.includes(kw)) { matched.add(theme); break; }
+    }
+  }
+  return Array.from(matched);
+}
+
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function pickThreeVerses(mood, context) {
+  const pool = VERSE_BANK[mood] || [];
+  if (pool.length === 0) return [];
+
+  const themes = detectThemes(context);
+
+  // Split the pool by whether any of its themes match the detected themes.
+  // We prefer themed matches first, then fill in from the general pool,
+  // shuffling within each bucket so repeat visits feel fresh.
+  const themed = shuffle(pool.filter(v => (v.themes||[]).some(t => themes.includes(t))));
+  const general = shuffle(pool.filter(v => !themed.includes(v)));
+
+  const picks = [];
+  // Take up to 2 themed if we have any, to keep variety
+  const maxThemed = themes.length > 0 ? Math.min(2, themed.length) : 0;
+  for (let i = 0; i < maxThemed && picks.length < 3; i++) picks.push(themed[i]);
+  for (let i = 0; picks.length < 3 && i < general.length; i++) picks.push(general[i]);
+  // Edge case: if general wasn't enough (small pool), fall back to remaining themed
+  for (let i = maxThemed; picks.length < 3 && i < themed.length; i++) picks.push(themed[i]);
+
+  return picks;
+}
+
+// ---- Fetch verse text from bible-api.com (KJV) ----------------------------
+async function fetchVerseText(reference) {
+  const encoded = encodeURIComponent(reference);
+  const res = await fetch(`https://bible-api.com/${encoded}?translation=kjv`);
+  if (!res.ok) throw new Error(`Could not reach Bible API for "${reference}"`);
+  const data = await res.json();
+  if (data.error) throw new Error(`Verse not found: ${reference}`);
+  return {
+    reference: data.reference || reference,
+    text: (data.text || '').trim().replace(/\s+/g, ' ')
+  };
+}
+
+// ---- Main flow ------------------------------------------------------------
+const LOADING_MESSAGES = [
+  'Shepard is searching Scripture for you...',
+  'Listening to what you shared...',
+  'Drawing verses that may speak to your heart...'
+];
+
+async function getVerses() {
+  if (!selectedMood) {
+    document.getElementById('mood-error').style.display = 'block';
+    return;
+  }
+  const context = document.getElementById('user-context').value.trim();
+  showScreen('screen-loading');
+
+  // Cycle loading messages for a sense of motion
+  const loadingEl = document.getElementById('loading-text');
+  let msgIdx = 0;
+  loadingEl.textContent = LOADING_MESSAGES[0];
+  const msgTimer = setInterval(() => {
+    msgIdx = (msgIdx + 1) % LOADING_MESSAGES.length;
+    loadingEl.textContent = LOADING_MESSAGES[msgIdx];
+  }, 1200);
+
+  try {
+    const chosen = pickThreeVerses(selectedMood, context);
+    if (chosen.length === 0) throw new Error('No verses available for this mood.');
+
+    // A small artificial minimum delay makes the loading state feel meaningful
+    // rather than flashing by.
+    const fetchPromise = Promise.all(chosen.map(async (v) => {
+      const scripture = await fetchVerseText(v.ref);
+      return { reference: scripture.reference, text: scripture.text, reason: v.reason };
+    }));
+    const minDelay = new Promise(r => setTimeout(r, 1400));
+
+    const [fetched] = await Promise.all([fetchPromise, minDelay]);
+
+    clearInterval(msgTimer);
+    renderVerses(fetched);
+    showScreen('screen-verses');
+  } catch (err) {
+    clearInterval(msgTimer);
+    console.error(err);
+    showScreen('screen-verses');
+    document.getElementById('verses-container').innerHTML = '';
+    const errDiv = document.getElementById('verses-error');
+    errDiv.style.display = 'block';
+    errDiv.textContent = 'Something went wrong loading your verses. Please check your connection and try again.';
+  }
+}
+
+function renderVerses(verses) {
+  const container = document.getElementById('verses-container');
+  container.innerHTML = '';
+  selectedVerse = null;
+  document.getElementById('reflect-btn').style.display = 'none';
+  document.getElementById('verses-error').style.display = 'none';
+
+  verses.forEach((v) => {
+    const card = document.createElement('div');
+    card.className = 'verse-card';
+    const ref = document.createElement('div');
+    ref.className = 'verse-ref';
+    ref.textContent = v.reference;
+    const text = document.createElement('div');
+    text.className = 'verse-text';
+    text.textContent = '"' + v.text + '"';
+    const reasonLabel = document.createElement('div');
+    reasonLabel.className = 'verse-reason-label';
+    reasonLabel.textContent = 'Why Shepard chose this';
+    const reason = document.createElement('div');
+    reason.className = 'verse-reason';
+    reason.textContent = v.reason;
+    card.append(ref, text, reasonLabel, reason);
+    card.onclick = () => {
+      document.querySelectorAll('.verse-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      selectedVerse = v;
+      document.getElementById('reflect-btn').style.display = 'block';
+    };
+    container.appendChild(card);
+  });
+}
+
+// ---- Share screen ---------------------------------------------------------
+function goToShare() {
+  if (!selectedVerse) return;
+  document.getElementById('share-ref').textContent = selectedVerse.reference;
+  document.getElementById('share-text').textContent = '"' + selectedVerse.text + '"';
+  showScreen('screen-share');
+}
+
+function shareVerse(platform) {
+  if (!selectedVerse) return;
+  const text = '"' + selectedVerse.text + '" — ' + selectedVerse.reference +
+               '\n\nShared via SHEPARD · Let His word guide you';
+
+  if (platform === 'facebook') {
+    const pageUrl = window.location.href;
+    const url = 'https://www.facebook.com/sharer/sharer.php?u=' +
+                encodeURIComponent(pageUrl) +
+                '&quote=' + encodeURIComponent(text);
+    window.open(url, '_blank', 'noopener,noreferrer');
+  } else if (platform === 'instagram') {
+    copyToClipboard(text).then((ok) => {
+      if (ok) showToast('Verse copied! Paste into your Instagram story or post.');
+      else alert('Open Instagram and share your verse:\n\n' + text);
+    });
+  } else if (platform === 'copy') {
+    copyToClipboard(text).then((ok) => {
+      if (ok) showToast('Verse copied to clipboard ✓');
+      else alert('Here is your verse:\n\n' + text);
+    });
+  }
+}
+
+function copyToClipboard(text) {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    return navigator.clipboard.writeText(text).then(() => true).catch(() => false);
+  }
+  // Fallback for older browsers / non-secure contexts (like file:// in some browsers)
+  try {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    const ok = document.execCommand('copy');
+    document.body.removeChild(ta);
+    return Promise.resolve(ok);
+  } catch (e) {
+    return Promise.resolve(false);
+  }
+}
+
+function showToast(message) {
+  const t = document.getElementById('toast');
+  t.textContent = message;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2600);
+}
+
+// ---- Reset ----------------------------------------------------------------
+function restart() {
+  selectedMood = '';
+  selectedVerse = null;
+  document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById('user-context').value = '';
+  showScreen('screen-welcome');
+}
+</script>
+</body>
+</html>

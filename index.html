@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Shepard — Let His word guide you</title>
-<meta name="description" content="Shepard helps you find King James Bible verses that speak to how you're feeling.">
+<title>Shepherd — Let His word guide you</title>
+<meta name="description" content="Shepherd helps you find King James Bible verses that speak to how you're feeling.">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: Georgia, serif; background: #f5f0e8; min-height: 100vh; display: flex; align-items: flex-start; justify-content: center; padding: 1rem; }
@@ -100,7 +100,7 @@
         <line x1="10" y1="18" x2="42" y2="18" stroke="#3B6D11" stroke-width="3" stroke-linecap="round"/>
         <path d="M26 58 Q22 54 20 50" stroke="#3B6D11" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
       </svg>
-      <div class="app-title">SHEPARD</div>
+      <div class="app-title">SHEPHERD</div>
       <div class="app-tagline">Let His word guide you</div>
     </div>
     <p class="intro-text">Select your mood, share what's on your heart,<br>and receive Scripture chosen just for you.</p>
@@ -109,7 +109,7 @@
 
   <!-- Mood -->
   <div id="screen-mood" class="screen">
-    <div class="mini-header"><span class="mini-title">SHEPARD</span></div>
+    <div class="mini-header"><span class="mini-title">SHEPHERD</span></div>
     <p class="section-label">How are you feeling today?</p>
     <div class="mood-grid">
       <button class="mood-btn" onclick="selectMood(this,'Anxious')">
@@ -170,13 +170,13 @@
         <line x1="24" y1="2" x2="24" y2="54" stroke="#3B6D11" stroke-width="3" stroke-linecap="round"/>
         <line x1="8" y1="16" x2="40" y2="16" stroke="#3B6D11" stroke-width="3" stroke-linecap="round"/>
       </svg>
-      <div class="loading-text" id="loading-text">Shepard is searching Scripture for you...</div>
+      <div class="loading-text" id="loading-text">Shepherd is searching Scripture for you...</div>
     </div>
   </div>
 
   <!-- Verses -->
   <div id="screen-verses" class="screen">
-    <div class="mini-header"><span class="mini-title">SHEPARD</span></div>
+    <div class="mini-header"><span class="mini-title">SHEPHERD</span></div>
     <p class="section-label" style="margin-bottom:1rem;">Three verses chosen for you. Select the one that speaks to your heart.</p>
     <div id="verses-container"></div>
     <button class="primary-btn" id="reflect-btn" onclick="goToShare()" style="display:none;">Reflect &amp; Share ›</button>
@@ -186,12 +186,12 @@
 
   <!-- Share -->
   <div id="screen-share" class="screen">
-    <div class="mini-header"><span class="mini-title">SHEPARD</span></div>
+    <div class="mini-header"><span class="mini-title">SHEPHERD</span></div>
     <button class="back-btn" onclick="showScreen('screen-verses')">← Back to verses</button>
     <div class="share-card">
       <div class="share-verse-ref" id="share-ref"></div>
       <div class="share-verse-text" id="share-text"></div>
-      <div class="share-watermark">— SHEPARD · Let His word guide you</div>
+      <div class="share-watermark">— SHEPHERD · Let His word guide you</div>
     </div>
     <div class="share-btns">
       <button class="share-btn" onclick="shareFromReflect('post')">Share as Post</button>
@@ -228,7 +228,7 @@
 
 <script>
 /* ======================================================================
-   SHEPARD — Scripture guidance by mood
+   SHEPHERD — Scripture guidance by mood
    ----------------------------------------------------------------------
    Initial concept build. This version uses a curated KJV verse bank
    mapped to each mood, with light context-keyword matching to make the
@@ -468,7 +468,7 @@ async function fetchVerseText(reference) {
 
 // ---- Main flow ------------------------------------------------------------
 const LOADING_MESSAGES = [
-  'Shepard is searching Scripture for you...',
+  'Shepherd is searching Scripture for you...',
   'Listening to what you shared...',
   'Drawing verses that may speak to your heart...'
 ];
@@ -544,7 +544,7 @@ function renderVerses(verses) {
     text.textContent = '"' + v.text + '"';
     const reasonLabel = document.createElement('div');
     reasonLabel.className = 'verse-reason-label';
-    reasonLabel.textContent = 'Why Shepard chose this';
+    reasonLabel.textContent = 'Why Shepherd chose this';
     const reason = document.createElement('div');
     reason.className = 'verse-reason';
     reason.textContent = v.reason;
@@ -617,7 +617,7 @@ async function doShare(format) {
 
   if (format === 'copy') {
     const text = '"' + verse.text + '" — ' + verse.reference +
-                 '\n\nShared via SHEPARD · Let His word guide you';
+                 '\n\nShared via SHEPHERD · Let His word guide you';
     const ok = await copyToClipboard(text);
     closeShareSheet();
     if (ok) showToast('Verse copied to clipboard ✓');
@@ -629,7 +629,7 @@ async function doShare(format) {
   try {
     const blob = await generateVerseImage(verse, format);
     const safeRef = verse.reference.replace(/[^A-Za-z0-9]+/g,'-').replace(/^-|-$/g,'');
-    const filename = 'shepard-' + safeRef + '-' + format + '.png';
+    const filename = 'shepherd-' + safeRef + '-' + format + '.png';
     const file = new File([blob], filename, { type: 'image/png' });
 
     const canShareFile = navigator.canShare && navigator.canShare({ files: [file] });
@@ -637,7 +637,7 @@ async function doShare(format) {
       try {
         await navigator.share({
           files: [file],
-          title: 'SHEPARD · ' + verse.reference,
+          title: 'SHEPHERD · ' + verse.reference,
           text: '"' + verse.text + '" — ' + verse.reference
         });
         closeShareSheet();
@@ -733,11 +733,11 @@ async function generateVerseImage(verse, format) {
   ctx.lineTo(W / 2 + 90, footerTop + 30);
   ctx.stroke();
 
-  // Watermark — SHEPARD
+  // Watermark — SHEPHERD
   ctx.fillStyle = '#2c4a1e';
   ctx.font = 'bold 38px Georgia, serif';
   ctx.textBaseline = 'alphabetic';
-  drawLetterSpaced(ctx, 'SHEPARD', W / 2, footerTop + 90, 6);
+  drawLetterSpaced(ctx, 'SHEPHERD', W / 2, footerTop + 90, 6);
 
   // Tagline
   ctx.fillStyle = '#7a6a50';

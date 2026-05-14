@@ -7,7 +7,7 @@
 <meta name="description" content="Shepherd helps you find King James Bible verses that speak to how you're feeling.">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: Georgia, serif; background: #f5f0e8; min-height: 100vh; display: flex; align-items: flex-start; justify-content: center; padding: 1rem; }
+  body { font-family: Georgia, serif; background: #f5f0e8; min-height: 100vh; display: flex; align-items: flex-start; justify-content: center; padding: 1rem 1rem 90px; }
   #app { max-width: 420px; width: 100%; }
   .screen { display: none; }
   .screen.active { display: block; }
@@ -15,16 +15,16 @@
   .logo-area { text-align: center; padding: 2.5rem 0 1.5rem; }
   .app-title { font-size: 30px; font-weight: 700; color: #2c4a1e; letter-spacing: 4px; font-family: Georgia, serif; }
   .app-tagline { font-size: 14px; color: #7a6a50; margin-top: 6px; font-style: italic; }
-  .staff-glyph { font-size: 52px; display: block; margin-bottom: 0.5rem; color: #3B6D11; }
 
   .section-label { font-size: 13px; color: #7a6a50; margin-bottom: 8px; font-family: Georgia, serif; }
   .intro-text { font-size: 15px; color: #5a4a35; text-align: center; line-height: 1.8; margin-bottom: 2rem; font-style: italic; }
 
-  .mood-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 1.5rem 0 10px; }
-  .mood-btn { padding: 1rem; border: 1px solid #d4c9b0; border-radius: 12px; background: #fff; cursor: pointer; text-align: center; transition: all 0.15s; font-family: Georgia, serif; }
+  /* Mood grid: 3 columns x 2 rows (6 moods) */
+  .mood-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 1.5rem 0 1.25rem; }
+  .mood-btn { padding: 0.9rem 0.5rem; border: 1px solid #d4c9b0; border-radius: 12px; background: #fff; cursor: pointer; text-align: center; transition: all 0.15s; font-family: Georgia, serif; }
   .mood-btn:hover { background: #f0ebe0; border-color: #b0a080; }
   .mood-btn.selected { border: 2px solid #3B6D11; background: #eaf3de; }
-  .mood-btn .mood-label { font-size: 14px; font-weight: 600; color: #2c4a1e; margin-top: 6px; display: block; }
+  .mood-btn .mood-label { font-size: 13px; font-weight: 600; color: #2c4a1e; margin-top: 6px; display: block; }
   .mood-icon { display: block; margin: 0 auto 6px; }
 
   textarea { width: 100%; padding: 12px; border: 1px solid #d4c9b0; border-radius: 10px; background: #fff; color: #3a2e1e; font-family: Georgia, serif; font-size: 14px; line-height: 1.7; resize: none; margin-top: 4px; }
@@ -38,14 +38,17 @@
   .verse-card { border: 1px solid #d4c9b0; border-radius: 14px; background: #fff; padding: 1.25rem 1.25rem 1rem; margin-bottom: 14px; cursor: pointer; transition: all 0.15s; position: relative; }
   .verse-card:hover { border-color: #3B6D11; background: #f8fcf5; }
   .verse-card.selected { border: 2px solid #3B6D11; background: #f0f8e8; }
-  .verse-ref { font-size: 12px; font-weight: 700; color: #3B6D11; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; font-family: Arial, sans-serif; padding-right: 40px; }
+  .verse-ref { font-size: 12px; font-weight: 700; color: #3B6D11; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; font-family: Arial, sans-serif; padding-right: 88px; }
   .verse-text { font-size: 15px; color: #2c1e0f; line-height: 1.75; font-style: italic; margin-bottom: 12px; border-left: 3px solid #c8deb0; padding-left: 12px; }
   .verse-reason-label { font-size: 11px; font-weight: 700; color: #7a6a50; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 5px; font-family: Arial, sans-serif; }
   .verse-reason { font-size: 13px; color: #5a4a35; line-height: 1.65; }
 
-  .verse-share-btn { position: absolute; top: 10px; right: 10px; width: 36px; height: 36px; border-radius: 50%; border: 1px solid #d4c9b0; background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; padding: 0; }
-  .verse-share-btn:hover { background: #eaf3de; border-color: #3B6D11; }
-  .verse-share-btn svg { display: block; }
+  /* Per-card action buttons (save + share) */
+  .verse-actions { position: absolute; top: 10px; right: 10px; display: flex; gap: 6px; }
+  .verse-action-btn { width: 36px; height: 36px; border-radius: 50%; border: 1px solid #d4c9b0; background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; padding: 0; }
+  .verse-action-btn:hover { background: #eaf3de; border-color: #3B6D11; }
+  .verse-action-btn.saved { background: #eaf3de; border-color: #3B6D11; }
+  .verse-action-btn svg { display: block; }
 
   .loading-state { text-align: center; padding: 4rem 1rem; }
   .cross-anim { font-size: 42px; color: #3B6D11; animation: pulse 1.6s ease-in-out infinite; display: block; }
@@ -67,7 +70,7 @@
   .mini-header { display: flex; align-items: center; justify-content: center; padding: 1.25rem 0 0.75rem; border-bottom: 1px solid #e0d8c8; margin-bottom: 1.25rem; }
   .mini-title { font-size: 18px; font-weight: 700; color: #2c4a1e; letter-spacing: 3px; font-family: Georgia, serif; }
 
-  .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #2c4a1e; color: #f0f8e8; padding: 12px 20px; border-radius: 10px; font-size: 13px; font-family: Georgia, serif; box-shadow: 0 6px 18px rgba(0,0,0,0.18); opacity: 0; pointer-events: none; transition: opacity 0.25s; z-index: 999; }
+  .toast { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%); background: #2c4a1e; color: #f0f8e8; padding: 12px 20px; border-radius: 10px; font-size: 13px; font-family: Georgia, serif; box-shadow: 0 6px 18px rgba(0,0,0,0.18); opacity: 0; pointer-events: none; transition: opacity 0.25s; z-index: 999; }
   .toast.show { opacity: 1; }
 
   /* Share sheet overlay */
@@ -85,6 +88,43 @@
   .share-sheet-btn.cancel:hover { background: transparent; color: #2c4a1e; }
   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
   @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+  /* Bottom navigation */
+  .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border-top: 1px solid #e0d8c8; display: flex; justify-content: space-around; padding: 8px 0 calc(8px + env(safe-area-inset-bottom)); z-index: 100; }
+  .bottom-nav-inner { display: flex; justify-content: space-around; width: 100%; max-width: 420px; margin: 0 auto; }
+  .nav-tab { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 14px; border: none; background: transparent; cursor: pointer; color: #b0a080; font-family: Georgia, serif; font-size: 11px; transition: color 0.15s; }
+  .nav-tab.active { color: #3B6D11; }
+  .nav-tab svg { display: block; }
+  .nav-tab svg path, .nav-tab svg line, .nav-tab svg rect, .nav-tab svg circle { stroke: currentColor; transition: stroke 0.15s; }
+  .nav-tab.active svg path[fill]:not([fill="none"]) { fill: currentColor; }
+
+  /* Saved verses screen */
+  .saved-list { display: flex; flex-direction: column; gap: 12px; }
+  .saved-item { border: 1px solid #d4c9b0; border-radius: 14px; background: #fff; padding: 1rem 1rem 0.85rem; position: relative; }
+  .saved-item-ref { font-size: 12px; font-weight: 700; color: #3B6D11; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; font-family: Arial, sans-serif; padding-right: 80px; }
+  .saved-item-text { font-size: 14px; color: #2c1e0f; line-height: 1.7; font-style: italic; margin-bottom: 8px; border-left: 3px solid #c8deb0; padding-left: 10px; }
+  .saved-item-meta { font-size: 11px; color: #7a6a50; font-style: italic; }
+
+  /* Journal screen */
+  .journal-add-btn { width: 100%; padding: 13px; background: #fff; color: #3B6D11; border: 1px dashed #3B6D11; border-radius: 12px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: Georgia, serif; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.15s; }
+  .journal-add-btn:hover { background: #eaf3de; }
+  .journal-list { display: flex; flex-direction: column; gap: 10px; }
+  .journal-item { border: 1px solid #d4c9b0; border-radius: 12px; background: #fff; padding: 0.9rem 1rem; cursor: pointer; transition: all 0.15s; }
+  .journal-item:hover { border-color: #3B6D11; }
+  .journal-item-date { font-size: 11px; color: #7a6a50; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; font-family: Arial, sans-serif; font-weight: 700; }
+  .journal-item-preview { font-size: 14px; color: #2c1e0f; line-height: 1.55; font-family: Georgia, serif; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+
+  .journal-editor-textarea { min-height: 220px; }
+  .journal-editor-toolbar { display: flex; gap: 8px; margin-top: 1rem; }
+  .journal-editor-toolbar .primary-btn { margin-top: 0; flex: 1; }
+  .ghost-btn { padding: 14px; background: #fff; color: #8b2020; border: 1px solid #e8c0c0; border-radius: 12px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: Georgia, serif; transition: all 0.15s; }
+  .ghost-btn:hover { background: #fdf0f0; }
+
+  /* Empty state */
+  .empty-state { text-align: center; padding: 3rem 1rem; color: #7a6a50; }
+  .empty-state svg { display: block; margin: 0 auto 1rem; }
+  .empty-state-title { font-size: 16px; color: #2c4a1e; margin-bottom: 6px; font-weight: 700; }
+  .empty-state-text { font-size: 13px; line-height: 1.6; font-style: italic; }
 </style>
 </head>
 <body>
@@ -147,14 +187,24 @@
         </svg>
         <span class="mood-label">Lost</span>
       </button>
+      <button class="mood-btn" onclick="selectMood(this,'Grateful')">
+        <!-- Gift box icon — "every good gift cometh down from the Father of lights" (James 1:17) -->
+        <svg class="mood-icon" width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="7" y="14" width="22" height="16" rx="2" stroke="#3B6D11" stroke-width="1.5"/>
+          <line x1="7" y1="20" x2="29" y2="20" stroke="#3B6D11" stroke-width="1.5"/>
+          <line x1="18" y1="14" x2="18" y2="30" stroke="#3B6D11" stroke-width="1.5"/>
+          <path d="M18 14C18 11 13 7 13 10.5C13 12.5 15.5 13.4 18 14M18 14C18 11 23 7 23 10.5C23 12.5 20.5 13.4 18 14" stroke="#3B6D11" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="mood-label">Grateful</span>
+      </button>
+      <button class="mood-btn" onclick="selectMood(this,'Angry')">
+        <!-- Lightning bolt — sudden, charged emotion -->
+        <svg class="mood-icon" width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M21 4L9 20H17L15 32L27 16H19L21 4Z" stroke="#3B6D11" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
+        </svg>
+        <span class="mood-label">Angry</span>
+      </button>
     </div>
-    <button class="mood-btn" style="width:100%;margin-bottom:1.25rem;" onclick="selectMood(this,'Grateful')">
-      <svg class="mood-icon" width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M18 6v24M6 18h24" stroke="#3B6D11" stroke-width="2" stroke-linecap="round"/>
-        <circle cx="18" cy="18" r="6" stroke="#3B6D11" stroke-width="1.3" opacity="0.35"/>
-      </svg>
-      <span class="mood-label">Grateful</span>
-    </button>
     <p class="section-label">Want to share what's on your heart? <em style="opacity:0.6">(optional)</em></p>
     <textarea id="user-context" rows="4" placeholder="e.g. My mother was just diagnosed with cancer and I'm scared about what's ahead..."></textarea>
     <div id="mood-error" class="error-msg" style="display:none;">Please select a mood before continuing.</div>
@@ -182,7 +232,7 @@
     <button class="back-btn" style="margin-top:1rem;" onclick="showScreen('screen-mood')">← Start over</button>
   </div>
 
-  <!-- Share -->
+  <!-- Share / Reflect -->
   <div id="screen-share" class="screen">
     <div class="mini-header"><span class="mini-title">SHEPHERD</span></div>
     <button class="back-btn" onclick="showScreen('screen-verses')">← Back to verses</button>
@@ -197,6 +247,48 @@
       <button class="share-btn full" onclick="shareFromReflect('copy')">Copy Verse Text</button>
     </div>
     <button class="primary-btn" style="margin-top:1rem;background:#5a4a35;" onclick="restart()">Start Over</button>
+  </div>
+
+  <!-- Saved verses -->
+  <div id="screen-saved" class="screen">
+    <div class="mini-header"><span class="mini-title">SAVED VERSES</span></div>
+    <div id="saved-empty" class="empty-state" style="display:none;">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M5 3v18l7-5 7 5V3a1 1 0 0 0-1-1H6a1 1 0 0 0-1 1z" stroke="#b0a080" stroke-width="1.5" stroke-linejoin="round"/>
+      </svg>
+      <div class="empty-state-title">No saved verses yet</div>
+      <div class="empty-state-text">Tap the bookmark icon on any verse to save it here for later.</div>
+    </div>
+    <div id="saved-container" class="saved-list"></div>
+  </div>
+
+  <!-- Journal list -->
+  <div id="screen-journal" class="screen">
+    <div class="mini-header"><span class="mini-title">JOURNAL</span></div>
+    <button class="journal-add-btn" onclick="openJournalEditor(null)">+ New entry</button>
+    <div id="journal-empty" class="empty-state" style="display:none;">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 4h13a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H4z" stroke="#b0a080" stroke-width="1.5" stroke-linejoin="round"/>
+        <line x1="8" y1="9" x2="15" y2="9" stroke="#b0a080" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="8" y1="13" x2="15" y2="13" stroke="#b0a080" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="8" y1="17" x2="12" y2="17" stroke="#b0a080" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <div class="empty-state-title">Your journal is empty</div>
+      <div class="empty-state-text">A private place to write what's on your heart. Entries stay on this device.</div>
+    </div>
+    <div id="journal-container" class="journal-list"></div>
+  </div>
+
+  <!-- Journal entry editor -->
+  <div id="screen-journal-edit" class="screen">
+    <div class="mini-header"><span class="mini-title">JOURNAL</span></div>
+    <button class="back-btn" onclick="closeJournalEditor()">← Back to journal</button>
+    <p class="section-label" id="journal-edit-date"></p>
+    <textarea id="journal-edit-text" class="journal-editor-textarea" rows="10" placeholder="What's on your heart today?"></textarea>
+    <div class="journal-editor-toolbar">
+      <button class="primary-btn" onclick="saveJournalEntry()">Save</button>
+      <button class="ghost-btn" id="journal-delete-btn" onclick="deleteCurrentJournalEntry()" style="display:none;">Delete</button>
+    </div>
   </div>
 
   <!-- Share format picker (bottom sheet) -->
@@ -224,14 +316,41 @@
   <div class="toast" id="toast"></div>
 </div>
 
+<!-- Bottom navigation -->
+<nav class="bottom-nav">
+  <div class="bottom-nav-inner">
+    <button class="nav-tab active" id="nav-home" onclick="showTab('home')">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 11l9-8 9 8v9a2 2 0 0 1-2 2h-4v-7h-6v7H5a2 2 0 0 1-2-2v-9z" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>
+      </svg>
+      <span>Home</span>
+    </button>
+    <button class="nav-tab" id="nav-saved" onclick="showTab('saved')">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M5 3v18l7-5 7 5V3a1 1 0 0 0-1-1H6a1 1 0 0 0-1 1z" stroke-width="1.8" stroke-linejoin="round"/>
+      </svg>
+      <span>Saved</span>
+    </button>
+    <button class="nav-tab" id="nav-journal" onclick="showTab('journal')">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 4h13a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H4z" stroke-width="1.8" stroke-linejoin="round"/>
+        <line x1="8" y1="9" x2="15" y2="9" stroke-width="1.8" stroke-linecap="round"/>
+        <line x1="8" y1="13" x2="15" y2="13" stroke-width="1.8" stroke-linecap="round"/>
+        <line x1="8" y1="17" x2="12" y2="17" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+      <span>Journal</span>
+    </button>
+  </div>
+</nav>
+
 <script>
 /* ======================================================================
    SHEPHERD — Scripture guidance by mood
    ----------------------------------------------------------------------
-   Initial concept build. This version uses a curated KJV verse bank
-   mapped to each mood, with light context-keyword matching to make the
-   selection feel personal. Actual verse text is fetched live from the
-   bible-api.com King James translation so Scripture stays authoritative.
+   Curated KJV verse bank by mood, with light context-keyword matching
+   to bias which verses surface. Verse text is fetched live from
+   bible-api.com. Saved verses and journal entries persist locally in
+   the browser via localStorage.
    ====================================================================== */
 
 // ---- Curated KJV verse bank -----------------------------------------------
@@ -365,29 +484,91 @@ const VERSE_BANK = {
     { ref: "Psalm 9:1",
       reason: "I will praise thee, O LORD, with my whole heart; I will shew forth all thy marvellous works. When gratitude rises in you, let it be loud, whole-hearted, and specific.",
       themes: ["praise"] }
+  ],
+  Angry: [
+    { ref: "Ephesians 4:26-27",
+      reason: "Anger itself isn't sinful — Paul acknowledges that. The warning is what you do with it. Don't let it ferment overnight, and don't give it room to become something darker.",
+      themes: ["wrath","conflict"] },
+    { ref: "James 1:19-20",
+      reason: "James lays out a discipline: swift to hear, slow to speak, slow to wrath. The wrath of man, he warns, doesn't produce the righteousness of God — even when our anger feels justified.",
+      themes: ["wrath","patience","response"] },
+    { ref: "Proverbs 15:1",
+      reason: "Sometimes anger is a response to someone else's anger. This proverb gives you permission to be the one who breaks that cycle — a soft answer instead of matching heat with heat.",
+      themes: ["wrath","response","conflict"] },
+    { ref: "Proverbs 14:29",
+      reason: "Patience and wisdom travel together. The same restraint that slows your anger is the restraint that lets you see the situation clearly enough to respond well.",
+      themes: ["patience","wisdom"] },
+    { ref: "Proverbs 16:32",
+      reason: "Self-control is harder than conquest. Solomon places the person who rules their own spirit above the mighty warrior — because the inner battle is the harder one.",
+      themes: ["self-control","strength"] },
+    { ref: "Psalm 37:8",
+      reason: "Anger has a way of pulling you toward action you'll regret. The psalmist's counsel is simple: cease, forsake it, let it go — before it leads you somewhere you don't want to go.",
+      themes: ["wrath","release"] },
+    { ref: "Colossians 3:8",
+      reason: "Paul names anger alongside things we 'put off' — like clothes we used to wear. Whatever drew anger from you before doesn't have to define you now.",
+      themes: ["wrath","identity"] },
+    { ref: "Ecclesiastes 7:9",
+      reason: "A sobering line: anger resteth in the bosom of fools. Not that anger makes you foolish in a moment — but that letting it linger gives it room to settle in.",
+      themes: ["wrath","wisdom"] }
   ]
 };
 
 const THEME_KEYWORDS = {
-  fear:      ["afraid","scared","scary","fear","terrified","panic","anxious","anxiety","worried","worry","nervous"],
-  health:    ["sick","cancer","illness","ill","hospital","diagnosis","disease","pain","surgery","tumor","treatment","chemo","doctor","covid"],
-  death:     ["died","death","passed","funeral","loss","grieving","mourning","widow","widower"],
-  family:    ["mother","mom","father","dad","parent","child","children","son","daughter","husband","wife","spouse","marriage","brother","sister","family","son's","daughter's"],
-  finance:   ["money","job","work","fired","laid off","bills","debt","poor","afford","rent","mortgage","unemployed","paycheck"],
-  future:    ["future","tomorrow","ahead","what's next","uncertain","unknown","next step"],
-  direction: ["lost","direction","purpose","calling","decision","choose","career","move","stuck"],
+  fear:        ["afraid","scared","scary","fear","terrified","panic","anxious","anxiety","worried","worry","nervous"],
+  health:      ["sick","cancer","illness","ill","hospital","diagnosis","disease","pain","surgery","tumor","treatment","chemo","doctor","covid"],
+  death:       ["died","death","passed","funeral","loss","grieving","mourning","widow","widower"],
+  family:      ["mother","mom","father","dad","parent","child","children","son","daughter","husband","wife","spouse","marriage","brother","sister","family","son's","daughter's"],
+  finance:     ["money","job","work","fired","laid off","bills","debt","poor","afford","rent","mortgage","unemployed","paycheck"],
+  future:      ["future","tomorrow","ahead","what's next","uncertain","unknown","next step"],
+  direction:   ["lost","direction","purpose","calling","decision","choose","career","move","stuck"],
   relationship:["friend","friendship","relationship","alone","lonely","betrayed","hurt","breakup","divorce"],
-  faith:     ["faith","doubt","pray","prayer","sin","forgive","forgiveness","church","god","jesus"],
-  suffering: ["suffering","hard","struggle","struggling","exhausted","tired","overwhelmed","depressed","depression"]
+  faith:       ["faith","doubt","pray","prayer","sin","forgive","forgiveness","church","god","jesus"],
+  suffering:   ["suffering","hard","struggle","struggling","exhausted","tired","overwhelmed","depressed","depression"],
+  wrath:       ["angry","anger","mad","furious","rage","raging","pissed","resentful","resentment","hate","hatred","betrayed","cheated"],
+  conflict:    ["argument","fight","fought","argued","conflict","family member","coworker","boss"]
 };
 
 let selectedMood = '';
 let selectedVerse = null;
+let currentHomeScreen = 'screen-welcome';
+let currentTab = 'home';
+
+// ---- Screen / tab navigation ---------------------------------------------
+const HOME_SCREENS = ['screen-welcome','screen-mood','screen-loading','screen-verses','screen-share'];
 
 function showScreen(id) {
+  if (HOME_SCREENS.includes(id)) {
+    currentHomeScreen = id;
+    currentTab = 'home';
+  }
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  window.scrollTo(0,0);
+  updateNavTabs();
+  window.scrollTo(0, 0);
+}
+
+function showTab(tab) {
+  currentTab = tab;
+  if (tab === 'home') {
+    showScreen(currentHomeScreen);
+    return;
+  }
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  if (tab === 'saved') {
+    document.getElementById('screen-saved').classList.add('active');
+    renderSavedVerses();
+  } else if (tab === 'journal') {
+    document.getElementById('screen-journal').classList.add('active');
+    renderJournalList();
+  }
+  updateNavTabs();
+  window.scrollTo(0, 0);
+}
+
+function updateNavTabs() {
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  const el = document.getElementById('nav-' + currentTab);
+  if (el) el.classList.add('active');
 }
 
 function selectMood(btn, mood) {
@@ -397,6 +578,7 @@ function selectMood(btn, mood) {
   document.getElementById('mood-error').style.display = 'none';
 }
 
+// ---- Intelligence layer --------------------------------------------------
 function detectThemes(text) {
   const lower = (text || '').toLowerCase();
   if (!lower) return [];
@@ -506,11 +688,41 @@ function renderVerses(verses) {
     const card = document.createElement('div');
     card.className = 'verse-card';
 
+    const actions = document.createElement('div');
+    actions.className = 'verse-actions';
+
+    // Save (bookmark) button
+    const saveBtn = document.createElement('button');
+    saveBtn.className = 'verse-action-btn';
+    saveBtn.setAttribute('aria-label', 'Save this verse');
+    const updateSaveBtn = () => {
+      const saved = isVerseSaved(v);
+      saveBtn.classList.toggle('saved', saved);
+      saveBtn.innerHTML = saved
+        ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="#3B6D11" xmlns="http://www.w3.org/2000/svg"><path d="M5 3v18l7-5 7 5V3a1 1 0 0 0-1-1H6a1 1 0 0 0-1 1z" stroke="#3B6D11" stroke-width="2" stroke-linejoin="round"/></svg>'
+        : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 3v18l7-5 7 5V3a1 1 0 0 0-1-1H6a1 1 0 0 0-1 1z" stroke="#3B6D11" stroke-width="2" stroke-linejoin="round"/></svg>';
+    };
+    updateSaveBtn();
+    saveBtn.onclick = (e) => {
+      e.stopPropagation();
+      if (isVerseSaved(v)) {
+        unsaveVerse(v);
+        showToast('Removed from saved');
+      } else {
+        saveVerse(v);
+        showToast('Saved ✓');
+      }
+      updateSaveBtn();
+    };
+
+    // Share button
     const shareBtn = document.createElement('button');
-    shareBtn.className = 'verse-share-btn';
+    shareBtn.className = 'verse-action-btn';
     shareBtn.setAttribute('aria-label', 'Share this verse');
     shareBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7" stroke="#3B6D11" stroke-width="2" stroke-linecap="round"/><path d="M16 6l-4-4-4 4" stroke="#3B6D11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="12" y1="2" x2="12" y2="15" stroke="#3B6D11" stroke-width="2" stroke-linecap="round"/></svg>';
     shareBtn.onclick = (e) => { e.stopPropagation(); openShareSheet(v); };
+
+    actions.append(saveBtn, shareBtn);
 
     const ref = document.createElement('div');
     ref.className = 'verse-ref';
@@ -524,7 +736,7 @@ function renderVerses(verses) {
     const reason = document.createElement('div');
     reason.className = 'verse-reason';
     reason.textContent = v.reason;
-    card.append(shareBtn, ref, text, reasonLabel, reason);
+    card.append(actions, ref, text, reasonLabel, reason);
     card.onclick = () => {
       document.querySelectorAll('.verse-card').forEach(c => c.classList.remove('selected'));
       card.classList.add('selected');
@@ -540,6 +752,198 @@ function goToShare() {
   document.getElementById('share-ref').textContent = selectedVerse.reference;
   document.getElementById('share-text').textContent = '"' + selectedVerse.text + '"';
   showScreen('screen-share');
+}
+
+// ---- localStorage helpers (saved verses + journal) -----------------------
+const SAVED_KEY = 'shepherd.savedVerses.v1';
+const JOURNAL_KEY = 'shepherd.journal.v1';
+
+function lsLoad(key, fallback) {
+  try { return JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback)); }
+  catch { return fallback; }
+}
+function lsSave(key, value) {
+  try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) { console.warn('localStorage save failed', e); }
+}
+
+function getSavedVerses() { return lsLoad(SAVED_KEY, []); }
+function isVerseSaved(v) { return getSavedVerses().some(s => s.reference === v.reference); }
+function saveVerse(v) {
+  const saved = getSavedVerses();
+  if (saved.some(s => s.reference === v.reference)) return;
+  saved.unshift({
+    reference: v.reference,
+    text: v.text,
+    reason: v.reason,
+    mood: selectedMood || '',
+    savedAt: Date.now()
+  });
+  lsSave(SAVED_KEY, saved);
+}
+function unsaveVerse(v) {
+  const saved = getSavedVerses().filter(s => s.reference !== v.reference);
+  lsSave(SAVED_KEY, saved);
+}
+
+function getJournalEntries() { return lsLoad(JOURNAL_KEY, []); }
+function upsertJournalEntry(entry) {
+  const entries = getJournalEntries();
+  if (entry.id) {
+    const idx = entries.findIndex(e => e.id === entry.id);
+    if (idx >= 0) { entries[idx] = { ...entries[idx], ...entry, updatedAt: Date.now() }; }
+    else { entries.unshift(entry); }
+  } else {
+    entry.id = 'j-' + Date.now() + '-' + Math.random().toString(36).slice(2,8);
+    entry.createdAt = Date.now();
+    entries.unshift(entry);
+  }
+  lsSave(JOURNAL_KEY, entries);
+  return entry;
+}
+function deleteJournalEntryById(id) {
+  const entries = getJournalEntries().filter(e => e.id !== id);
+  lsSave(JOURNAL_KEY, entries);
+}
+
+function formatDate(ts) {
+  const d = new Date(ts);
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return months[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
+}
+
+// ---- Saved verses screen --------------------------------------------------
+function renderSavedVerses() {
+  const container = document.getElementById('saved-container');
+  const empty = document.getElementById('saved-empty');
+  const saved = getSavedVerses();
+  container.innerHTML = '';
+  if (saved.length === 0) { empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+
+  saved.forEach(v => {
+    const item = document.createElement('div');
+    item.className = 'saved-item';
+
+    const actions = document.createElement('div');
+    actions.className = 'verse-actions';
+
+    const unsaveBtn = document.createElement('button');
+    unsaveBtn.className = 'verse-action-btn saved';
+    unsaveBtn.setAttribute('aria-label', 'Remove from saved');
+    unsaveBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="#3B6D11" xmlns="http://www.w3.org/2000/svg"><path d="M5 3v18l7-5 7 5V3a1 1 0 0 0-1-1H6a1 1 0 0 0-1 1z" stroke="#3B6D11" stroke-width="2" stroke-linejoin="round"/></svg>';
+    unsaveBtn.onclick = () => {
+      unsaveVerse(v);
+      showToast('Removed from saved');
+      renderSavedVerses();
+    };
+
+    const shareBtn = document.createElement('button');
+    shareBtn.className = 'verse-action-btn';
+    shareBtn.setAttribute('aria-label', 'Share this verse');
+    shareBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7" stroke="#3B6D11" stroke-width="2" stroke-linecap="round"/><path d="M16 6l-4-4-4 4" stroke="#3B6D11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="12" y1="2" x2="12" y2="15" stroke="#3B6D11" stroke-width="2" stroke-linecap="round"/></svg>';
+    shareBtn.onclick = () => openShareSheet(v);
+
+    actions.append(unsaveBtn, shareBtn);
+
+    const ref = document.createElement('div');
+    ref.className = 'saved-item-ref';
+    ref.textContent = v.reference;
+
+    const text = document.createElement('div');
+    text.className = 'saved-item-text';
+    text.textContent = '"' + v.text + '"';
+
+    const meta = document.createElement('div');
+    meta.className = 'saved-item-meta';
+    const moodStr = v.mood ? v.mood + ' · ' : '';
+    meta.textContent = moodStr + 'Saved ' + formatDate(v.savedAt);
+
+    item.append(actions, ref, text, meta);
+    container.appendChild(item);
+  });
+}
+
+// ---- Journal --------------------------------------------------------------
+let editingJournalId = null;
+
+function renderJournalList() {
+  const container = document.getElementById('journal-container');
+  const empty = document.getElementById('journal-empty');
+  const entries = getJournalEntries();
+  container.innerHTML = '';
+  if (entries.length === 0) { empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+
+  entries.forEach(entry => {
+    const item = document.createElement('div');
+    item.className = 'journal-item';
+    const date = document.createElement('div');
+    date.className = 'journal-item-date';
+    date.textContent = formatDate(entry.createdAt);
+    const preview = document.createElement('div');
+    preview.className = 'journal-item-preview';
+    preview.textContent = entry.text || '(empty entry)';
+    item.append(date, preview);
+    item.onclick = () => openJournalEditor(entry.id);
+    container.appendChild(item);
+  });
+}
+
+function openJournalEditor(id) {
+  editingJournalId = id;
+  const editScreen = document.getElementById('screen-journal-edit');
+  const textarea = document.getElementById('journal-edit-text');
+  const dateLabel = document.getElementById('journal-edit-date');
+  const deleteBtn = document.getElementById('journal-delete-btn');
+
+  if (id) {
+    const entry = getJournalEntries().find(e => e.id === id);
+    if (entry) {
+      textarea.value = entry.text || '';
+      dateLabel.textContent = formatDate(entry.createdAt);
+      deleteBtn.style.display = 'block';
+    }
+  } else {
+    textarea.value = '';
+    dateLabel.textContent = formatDate(Date.now());
+    deleteBtn.style.display = 'none';
+  }
+
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  editScreen.classList.add('active');
+  window.scrollTo(0, 0);
+  setTimeout(() => textarea.focus(), 50);
+}
+
+function closeJournalEditor() {
+  editingJournalId = null;
+  showTab('journal');
+}
+
+function saveJournalEntry() {
+  const text = document.getElementById('journal-edit-text').value.trim();
+  if (!text) {
+    if (editingJournalId) {
+      deleteJournalEntryById(editingJournalId);
+    }
+    closeJournalEditor();
+    return;
+  }
+  if (editingJournalId) {
+    upsertJournalEntry({ id: editingJournalId, text });
+  } else {
+    upsertJournalEntry({ text });
+  }
+  showToast('Saved ✓');
+  closeJournalEditor();
+}
+
+function deleteCurrentJournalEntry() {
+  if (!editingJournalId) return;
+  if (!confirm('Delete this journal entry? This cannot be undone.')) return;
+  deleteJournalEntryById(editingJournalId);
+  showToast('Entry deleted');
+  closeJournalEditor();
 }
 
 // ---- Share flow (image generation + native share) -----------------------
@@ -669,7 +1073,7 @@ async function generateVerseImage(verse, format) {
   const footerTop = H - 220;
   const availableH = footerTop - textTop;
   const maxTextW = W - 220;
-  const verseQuoted = '\u201C' + verse.text + '\u201D';
+  const verseQuoted = '“' + verse.text + '”';
 
   const fit = fitVerseText(ctx, verseQuoted, maxTextW, availableH);
   ctx.fillStyle = '#2c1e0f';

@@ -19,7 +19,6 @@
   .section-label { font-size: 13px; color: #7a6a50; margin-bottom: 8px; font-family: Georgia, serif; }
   .intro-text { font-size: 15px; color: #5a4a35; text-align: center; line-height: 1.8; margin-bottom: 2rem; font-style: italic; }
 
-  /* Mood grid: 3 columns x 2 rows (6 moods) */
   .mood-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 1.5rem 0 1.25rem; }
   .mood-btn { padding: 0.9rem 0.5rem; border: 1px solid #d4c9b0; border-radius: 12px; background: #fff; cursor: pointer; text-align: center; transition: all 0.15s; font-family: Georgia, serif; }
   .mood-btn:hover { background: #f0ebe0; border-color: #b0a080; }
@@ -38,12 +37,18 @@
   .verse-card { border: 1px solid #d4c9b0; border-radius: 14px; background: #fff; padding: 1.25rem 1.25rem 1rem; margin-bottom: 14px; cursor: pointer; transition: all 0.15s; position: relative; }
   .verse-card:hover { border-color: #3B6D11; background: #f8fcf5; }
   .verse-card.selected { border: 2px solid #3B6D11; background: #f0f8e8; }
-  .verse-ref { font-size: 12px; font-weight: 700; color: #3B6D11; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; font-family: Arial, sans-serif; padding-right: 88px; }
+  .verse-ref { font-size: 12px; font-weight: 700; color: #3B6D11; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; font-family: Arial, sans-serif; padding-right: 130px; }
   .verse-text { font-size: 15px; color: #2c1e0f; line-height: 1.75; font-style: italic; margin-bottom: 12px; border-left: 3px solid #c8deb0; padding-left: 12px; }
   .verse-reason-label { font-size: 11px; font-weight: 700; color: #7a6a50; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 5px; font-family: Arial, sans-serif; }
   .verse-reason { font-size: 13px; color: #5a4a35; line-height: 1.65; }
 
-  /* Per-card action buttons (save + share) */
+  /* Modern paraphrase (collapsed by default, expands via toggle) */
+  .verse-modern-toggle { background: none; border: none; color: #3B6D11; font-family: Georgia, serif; font-size: 12px; font-style: italic; cursor: pointer; padding: 10px 0 2px; text-align: left; }
+  .verse-modern-toggle:hover { color: #2c4a1e; text-decoration: underline; }
+  .verse-modern { display: none; margin-top: 8px; padding-top: 10px; border-top: 1px dashed #d4c9b0; }
+  .verse-modern.show { display: block; }
+  .verse-modern-text { font-size: 13px; color: #2c1e0f; line-height: 1.7; font-family: Georgia, serif; }
+
   .verse-actions { position: absolute; top: 10px; right: 10px; display: flex; gap: 6px; }
   .verse-action-btn { width: 36px; height: 36px; border-radius: 50%; border: 1px solid #d4c9b0; background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; padding: 0; }
   .verse-action-btn:hover { background: #eaf3de; border-color: #3B6D11; }
@@ -73,7 +78,6 @@
   .toast { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%); background: #2c4a1e; color: #f0f8e8; padding: 12px 20px; border-radius: 10px; font-size: 13px; font-family: Georgia, serif; box-shadow: 0 6px 18px rgba(0,0,0,0.18); opacity: 0; pointer-events: none; transition: opacity 0.25s; z-index: 999; }
   .toast.show { opacity: 1; }
 
-  /* Share sheet overlay */
   .share-sheet { position: fixed; inset: 0; display: none; align-items: flex-end; justify-content: center; z-index: 1000; }
   .share-sheet.open { display: flex; }
   .share-sheet-backdrop { position: absolute; inset: 0; background: rgba(30,24,14,0.45); animation: fadeIn 0.18s ease; }
@@ -89,7 +93,6 @@
   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
   @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
 
-  /* Bottom navigation */
   .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border-top: 1px solid #e0d8c8; display: flex; justify-content: space-around; padding: 8px 0 calc(8px + env(safe-area-inset-bottom)); z-index: 100; }
   .bottom-nav-inner { display: flex; justify-content: space-around; width: 100%; max-width: 420px; margin: 0 auto; }
   .nav-tab { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 14px; border: none; background: transparent; cursor: pointer; color: #b0a080; font-family: Georgia, serif; font-size: 11px; transition: color 0.15s; }
@@ -98,14 +101,12 @@
   .nav-tab svg path, .nav-tab svg line, .nav-tab svg rect, .nav-tab svg circle { stroke: currentColor; transition: stroke 0.15s; }
   .nav-tab.active svg path[fill]:not([fill="none"]) { fill: currentColor; }
 
-  /* Saved verses screen */
   .saved-list { display: flex; flex-direction: column; gap: 12px; }
   .saved-item { border: 1px solid #d4c9b0; border-radius: 14px; background: #fff; padding: 1rem 1rem 0.85rem; position: relative; }
-  .saved-item-ref { font-size: 12px; font-weight: 700; color: #3B6D11; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; font-family: Arial, sans-serif; padding-right: 80px; }
+  .saved-item-ref { font-size: 12px; font-weight: 700; color: #3B6D11; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; font-family: Arial, sans-serif; padding-right: 130px; }
   .saved-item-text { font-size: 14px; color: #2c1e0f; line-height: 1.7; font-style: italic; margin-bottom: 8px; border-left: 3px solid #c8deb0; padding-left: 10px; }
   .saved-item-meta { font-size: 11px; color: #7a6a50; font-style: italic; }
 
-  /* Journal screen */
   .journal-add-btn { width: 100%; padding: 13px; background: #fff; color: #3B6D11; border: 1px dashed #3B6D11; border-radius: 12px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: Georgia, serif; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.15s; }
   .journal-add-btn:hover { background: #eaf3de; }
   .journal-list { display: flex; flex-direction: column; gap: 10px; }
@@ -120,7 +121,6 @@
   .ghost-btn { padding: 14px; background: #fff; color: #8b2020; border: 1px solid #e8c0c0; border-radius: 12px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: Georgia, serif; transition: all 0.15s; }
   .ghost-btn:hover { background: #fdf0f0; }
 
-  /* Empty state */
   .empty-state { text-align: center; padding: 3rem 1rem; color: #7a6a50; }
   .empty-state svg { display: block; margin: 0 auto 1rem; }
   .empty-state-title { font-size: 16px; color: #2c4a1e; margin-bottom: 6px; font-weight: 700; }
@@ -130,7 +130,6 @@
 <body>
 <div id="app">
 
-  <!-- Welcome -->
   <div id="screen-welcome" class="screen active">
     <div class="logo-area">
       <svg width="52" height="62" viewBox="0 0 52 62" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block;margin:0 auto 0.5rem;">
@@ -145,27 +144,28 @@
     <button class="primary-btn" onclick="showScreen('screen-mood')">Begin</button>
   </div>
 
-  <!-- Mood -->
   <div id="screen-mood" class="screen">
     <div class="mini-header"><span class="mini-title">SHEPHERD</span></div>
     <p class="section-label">How are you feeling today?</p>
     <div class="mood-grid">
       <button class="mood-btn" onclick="selectMood(this,'Anxious')">
+        <!-- Storm cloud with rain — reads as "anxious / weather of the mind" -->
         <svg class="mood-icon" width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="18" cy="18" r="15" stroke="#3B6D11" stroke-width="1.5"/>
-          <path d="M11 14c0-1.1.9-2 2-2s2 .9 2 2" stroke="#3B6D11" stroke-width="1.5" stroke-linecap="round"/>
-          <path d="M21 14c0-1.1.9-2 2-2s2 .9 2 2" stroke="#3B6D11" stroke-width="1.5" stroke-linecap="round"/>
-          <path d="M12 23c1.5-1.5 3.5-2 6-2s4.5.5 6 2" stroke="#3B6D11" stroke-width="1.5" stroke-linecap="round"/>
-          <path d="M18 8v3M18 25v3" stroke="#3B6D11" stroke-width="1.2" stroke-linecap="round" opacity="0.4"/>
+          <path d="M8 21 C5 21 4 19 4 17 C4 14 7 12 10 13 C11 9 14.5 8 18 8 C22 8 24.5 10 25.5 13 C28.5 12 31 14 31 17 C31 20 28 21 26 21 Z" stroke="#3B6D11" stroke-width="1.5" stroke-linejoin="round" fill="none"/>
+          <line x1="11.5" y1="25" x2="9.5" y2="30" stroke="#3B6D11" stroke-width="1.6" stroke-linecap="round"/>
+          <line x1="18" y1="25" x2="16" y2="30" stroke="#3B6D11" stroke-width="1.6" stroke-linecap="round"/>
+          <line x1="24.5" y1="25" x2="22.5" y2="30" stroke="#3B6D11" stroke-width="1.6" stroke-linecap="round"/>
         </svg>
         <span class="mood-label">Anxious</span>
       </button>
       <button class="mood-btn" onclick="selectMood(this,'Grieving')">
         <svg class="mood-icon" width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M18 30C18 30 6 22 6 14a8 8 0 0 1 12-6.93A8 8 0 0 1 30 14c0 8-12 16-12 16z" stroke="#3B6D11" stroke-width="1.5" stroke-linejoin="round"/>
-          <path d="M18 30C18 30 6 22 6 14a8 8 0 0 1 12-6.93" stroke="#3B6D11" stroke-width="1.5" stroke-linecap="round" opacity="0.3"/>
-          <line x1="18" y1="16" x2="18" y2="22" stroke="#3B6D11" stroke-width="1.4" stroke-linecap="round"/>
-          <circle cx="18" cy="14" r="1.2" fill="#3B6D11"/>
+          <circle cx="18" cy="18" r="15" stroke="#3B6D11" stroke-width="1.5"/>
+          <path d="M11 12 Q13 14.5 15 12" stroke="#3B6D11" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+          <path d="M21 12 Q23 14.5 25 12" stroke="#3B6D11" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+          <path d="M12.5 15.5 Q11.5 17.5 12.5 19.5 Q13.5 17.5 12.5 15.5 Z" fill="#3B6D11" opacity="0.55"/>
+          <path d="M23.5 15.5 Q22.5 17.5 23.5 19.5 Q24.5 17.5 23.5 15.5 Z" fill="#3B6D11" opacity="0.55"/>
+          <path d="M13 25 Q18 22 23 25" stroke="#3B6D11" stroke-width="1.5" stroke-linecap="round" fill="none"/>
         </svg>
         <span class="mood-label">Grieving</span>
       </button>
@@ -188,7 +188,6 @@
         <span class="mood-label">Lost</span>
       </button>
       <button class="mood-btn" onclick="selectMood(this,'Grateful')">
-        <!-- Gift box icon — "every good gift cometh down from the Father of lights" (James 1:17) -->
         <svg class="mood-icon" width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect x="7" y="14" width="22" height="16" rx="2" stroke="#3B6D11" stroke-width="1.5"/>
           <line x1="7" y1="20" x2="29" y2="20" stroke="#3B6D11" stroke-width="1.5"/>
@@ -198,9 +197,13 @@
         <span class="mood-label">Grateful</span>
       </button>
       <button class="mood-btn" onclick="selectMood(this,'Angry')">
-        <!-- Lightning bolt — sudden, charged emotion -->
         <svg class="mood-icon" width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M21 4L9 20H17L15 32L27 16H19L21 4Z" stroke="#3B6D11" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
+          <circle cx="18" cy="18" r="15" stroke="#3B6D11" stroke-width="1.5"/>
+          <line x1="9.5" y1="12" x2="15.5" y2="14.5" stroke="#3B6D11" stroke-width="1.8" stroke-linecap="round"/>
+          <line x1="26.5" y1="12" x2="20.5" y2="14.5" stroke="#3B6D11" stroke-width="1.8" stroke-linecap="round"/>
+          <circle cx="13" cy="17" r="1.2" fill="#3B6D11"/>
+          <circle cx="23" cy="17" r="1.2" fill="#3B6D11"/>
+          <line x1="13" y1="24" x2="23" y2="24" stroke="#3B6D11" stroke-width="1.6" stroke-linecap="round"/>
         </svg>
         <span class="mood-label">Angry</span>
       </button>
@@ -211,7 +214,6 @@
     <button class="primary-btn" onclick="getVerses()">Find My Verses</button>
   </div>
 
-  <!-- Loading -->
   <div id="screen-loading" class="screen">
     <div class="loading-state">
       <svg class="cross-anim" width="48" height="56" viewBox="0 0 48 56" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block;margin:0 auto;">
@@ -222,7 +224,6 @@
     </div>
   </div>
 
-  <!-- Verses -->
   <div id="screen-verses" class="screen">
     <div class="mini-header"><span class="mini-title">SHEPHERD</span></div>
     <p class="section-label" style="margin-bottom:1rem;">Three verses chosen for you. Select the one that speaks to your heart.</p>
@@ -232,7 +233,6 @@
     <button class="back-btn" style="margin-top:1rem;" onclick="showScreen('screen-mood')">← Start over</button>
   </div>
 
-  <!-- Share / Reflect -->
   <div id="screen-share" class="screen">
     <div class="mini-header"><span class="mini-title">SHEPHERD</span></div>
     <button class="back-btn" onclick="showScreen('screen-verses')">← Back to verses</button>
@@ -249,7 +249,6 @@
     <button class="primary-btn" style="margin-top:1rem;background:#5a4a35;" onclick="restart()">Start Over</button>
   </div>
 
-  <!-- Saved verses -->
   <div id="screen-saved" class="screen">
     <div class="mini-header"><span class="mini-title">SAVED VERSES</span></div>
     <div id="saved-empty" class="empty-state" style="display:none;">
@@ -262,7 +261,6 @@
     <div id="saved-container" class="saved-list"></div>
   </div>
 
-  <!-- Journal list -->
   <div id="screen-journal" class="screen">
     <div class="mini-header"><span class="mini-title">JOURNAL</span></div>
     <button class="journal-add-btn" onclick="openJournalEditor(null)">+ New entry</button>
@@ -279,7 +277,6 @@
     <div id="journal-container" class="journal-list"></div>
   </div>
 
-  <!-- Journal entry editor -->
   <div id="screen-journal-edit" class="screen">
     <div class="mini-header"><span class="mini-title">JOURNAL</span></div>
     <button class="back-btn" onclick="closeJournalEditor()">← Back to journal</button>
@@ -291,7 +288,6 @@
     </div>
   </div>
 
-  <!-- Share format picker (bottom sheet) -->
   <div class="share-sheet" id="share-sheet" onclick="onShareSheetClick(event)">
     <div class="share-sheet-backdrop"></div>
     <div class="share-sheet-panel" onclick="event.stopPropagation()">
@@ -316,7 +312,6 @@
   <div class="toast" id="toast"></div>
 </div>
 
-<!-- Bottom navigation -->
 <nav class="bottom-nav">
   <div class="bottom-nav-inner">
     <button class="nav-tab active" id="nav-home" onclick="showTab('home')">
@@ -347,171 +342,508 @@
 /* ======================================================================
    SHEPHERD — Scripture guidance by mood
    ----------------------------------------------------------------------
-   Curated KJV verse bank by mood, with light context-keyword matching
-   to bias which verses surface. Verse text is fetched live from
-   bible-api.com. Saved verses and journal entries persist locally in
-   the browser via localStorage.
+   Verses are stored once in VERSE_LIBRARY. A verse can serve multiple
+   moods, each with its own "reason" (why this verse for this mood).
+   The `modern` field is a present-day paraphrase shown on demand via
+   the "Read in modern terms" toggle. Verse text itself is fetched live
+   from bible-api.com (KJV). Saved verses + journal entries persist
+   locally via localStorage.
    ====================================================================== */
 
-// ---- Curated KJV verse bank -----------------------------------------------
-const VERSE_BANK = {
-  Anxious: [
-    { ref: "Philippians 4:6-7",
-      reason: "When anxiety presses in, Paul invites you to lay every worry before God with thanksgiving. The promise that follows isn't the removal of trouble — it's a peace that guards your heart even when circumstances don't change.",
-      themes: ["worry","prayer"] },
-    { ref: "Isaiah 41:10",
-      reason: "Fear shrinks the world down to whatever is threatening you right now. This verse widens it again — reminding you that the God who holds the universe is also holding your hand today.",
-      themes: ["fear"] },
-    { ref: "1 Peter 5:7",
-      reason: "You don't have to carry what you're carrying alone. The invitation here is to hand it off, piece by piece — not because the concern doesn't matter, but because He cares for you personally.",
-      themes: ["worry","burden"] },
-    { ref: "Matthew 6:34",
-      reason: "Anxiety almost always lives in tomorrow. Jesus gently pulls you back to today and promises that grace will be there when tomorrow actually arrives.",
-      themes: ["future","worry"] },
-    { ref: "John 14:27",
-      reason: "The peace Jesus offers isn't the kind that depends on everything going right. It's a peace given in the middle of uncertainty — specifically so your heart wouldn't be troubled or afraid.",
-      themes: ["fear","peace"] },
-    { ref: "2 Timothy 1:7",
-      reason: "Fear is loud, but it doesn't get to define you. Paul reminds you that what's actually been given to you is power, love, and a sound mind — a quiet identity that fear cannot take.",
-      themes: ["fear","identity"] },
-    { ref: "Psalm 94:19",
-      reason: "When your thoughts are racing and multiplying inside you, this verse is honest about that experience — and points to the comforts of God that steady an overwhelmed mind.",
-      themes: ["worry","thoughts"] },
-    { ref: "Proverbs 3:5-6",
-      reason: "Much of anxiety is the exhaustion of trying to figure everything out yourself. These verses are an invitation to lean your weight on someone whose understanding is bigger than yours.",
-      themes: ["trust","future"] }
-  ],
-  Grieving: [
-    { ref: "Psalm 34:18",
-      reason: "Grief can feel like God has gone silent, but this verse says the opposite — He draws nearer to broken hearts, not further away. You're not alone in this, even when it feels like it.",
-      themes: ["loss","broken"] },
-    { ref: "Matthew 5:4",
-      reason: "Jesus doesn't rush past sorrow or tell you to move on. He calls mourners blessed and promises comfort — not as a platitude, but as a real thing that meets you in your tears.",
-      themes: ["loss","mourning"] },
-    { ref: "Revelation 21:4",
-      reason: "This is the promise Christians hold in grief: that tears, death, sorrow, and pain are temporary. One day God Himself will wipe away every tear — and the reunion you're longing for will be real.",
-      themes: ["death","hope","eternity"] },
-    { ref: "John 14:1-3",
-      reason: "Jesus spoke these words to friends about to lose Him. He doesn't deny the pain — He points past it to a prepared place and a reunion that grief cannot undo.",
-      themes: ["death","hope","family"] },
-    { ref: "Psalm 147:3",
-      reason: "A short verse that carries a lot. God heals the broken-hearted; He binds up their wounds. Not dismisses them, not minimizes them — binds them up, gently, over time.",
-      themes: ["broken","healing"] },
-    { ref: "2 Corinthians 1:3-4",
-      reason: "The God of all comfort meets you in this, and one day the comfort you receive now will become comfort you pass on to someone else walking through their own loss.",
-      themes: ["loss","comfort"] },
-    { ref: "John 11:25-26",
-      reason: "At Lazarus's tomb, Jesus made the boldest claim anyone has ever made about death. For those who trust Him, grief is real — but it is not the final word.",
-      themes: ["death","hope","eternity"] },
-    { ref: "Lamentations 3:22-23",
-      reason: "Even in a book of lament, this verse breaks through: His mercies are new every morning. Grief comes in waves, and so does grace — fresh for whatever today holds.",
-      themes: ["mourning","mercy"] }
-  ],
-  Hopeful: [
-    { ref: "Jeremiah 29:11",
-      reason: "A verse worth reading slowly. God's thoughts toward you are thoughts of peace, not evil — an expected end, a future. Hope isn't wishful thinking; it's trust in the One planning ahead for you.",
-      themes: ["future","plans"] },
-    { ref: "Romans 15:13",
-      reason: "The God of hope fills you with joy and peace in believing — so that your hope can actually abound. This is hope that grows, not shrinks, the longer you walk with Him.",
-      themes: ["faith","joy"] },
-    { ref: "Romans 8:28",
-      reason: "This isn't a promise that everything is good — it's a promise that God is working all of it together for good. The hard parts of your story are not wasted in His hands.",
-      themes: ["trust","future","suffering"] },
-    { ref: "Isaiah 40:31",
-      reason: "Hope in Scripture is tied to waiting — and waiting well renews your strength. Eagles' wings, running without weariness, walking without fainting — that's the promise for those who keep their eyes on Him.",
-      themes: ["strength","waiting"] },
-    { ref: "Hebrews 11:1",
-      reason: "A definition worth memorizing: faith is the substance of things hoped for. What you hope for isn't unreal — it's real enough that faith treats it as substance today.",
-      themes: ["faith"] },
-    { ref: "1 Peter 1:3",
-      reason: "Peter calls it 'a lively hope' — a hope that is alive, not theoretical. It's grounded in the resurrection of Jesus, the strongest evidence there is that death does not have the last word.",
-      themes: ["resurrection","faith"] },
-    { ref: "Psalm 27:14",
-      reason: "Wait on the LORD. Be of good courage. Wait, I say, on the LORD. Twice the psalmist repeats it — because hope takes practice, and courage grows while we're still waiting.",
-      themes: ["waiting","courage"] },
-    { ref: "Romans 5:3-5",
-      reason: "Paul traces the strange path hope takes: tribulation produces patience, patience produces experience, experience produces hope — and hope does not make us ashamed.",
-      themes: ["suffering","perseverance"] }
-  ],
-  Lost: [
-    { ref: "Proverbs 3:5-6",
-      reason: "When the path ahead isn't clear, the invitation isn't to figure it all out — it's to trust, to lean, and in every step to acknowledge Him. The promise is that He will direct your paths.",
-      themes: ["direction","trust"] },
-    { ref: "Psalm 119:105",
-      reason: "God rarely gives floodlights on the whole road. His word is a lamp — enough light for the next step, and then the next. That's usually all you need to keep walking.",
-      themes: ["direction","word"] },
-    { ref: "John 14:6",
-      reason: "When you feel lost, this verse cuts through the noise. Jesus doesn't just point to a way — He says He is the way. Finding Him is, in the deepest sense, finding yourself.",
-      themes: ["direction","identity"] },
-    { ref: "Psalm 32:8",
-      reason: "A tender promise from God Himself: I will instruct thee and teach thee in the way which thou shalt go: I will guide thee with mine eye. You are being watched over, not left to wander.",
-      themes: ["direction","guidance"] },
-    { ref: "James 1:5",
-      reason: "If you don't know what to do — ask. God gives wisdom liberally and doesn't shame you for needing it. That alone should make asking easier.",
-      themes: ["wisdom","decision"] },
-    { ref: "Isaiah 30:21",
-      reason: "You won't always see the way forward before you take the step. Often God's guidance comes like a voice behind you — 'this is the way, walk ye in it' — after you've already started moving.",
-      themes: ["direction","guidance"] },
-    { ref: "Luke 15:4-6",
-      reason: "The parable of the lost sheep is Jesus's own answer to feeling lost. The shepherd doesn't wait for the sheep to find its way home — He goes looking. That's the God you belong to.",
-      themes: ["identity","belonging"] },
-    { ref: "Psalm 23:1-3",
-      reason: "The most famous shepherd passage in the Bible is for moments exactly like this one. He leads. He restores. He makes you lie down when you need it most. You are being shepherded, even when you feel lost.",
-      themes: ["direction","identity","rest"] }
-  ],
-  Grateful: [
-    { ref: "Psalm 100:4-5",
-      reason: "Thanksgiving is the gate, praise is the courts — that's the posture this psalm invites you into. Gratitude isn't just a feeling; it's a way of approaching God.",
-      themes: ["praise","thanksgiving"] },
-    { ref: "1 Thessalonians 5:16-18",
-      reason: "Rejoice evermore. Pray without ceasing. In every thing give thanks. Three short commands that, taken together, describe a heart that has learned the rhythm of gratitude.",
-      themes: ["thanksgiving","joy"] },
-    { ref: "Philippians 4:4",
-      reason: "Paul wrote this from prison. The rejoicing he calls you to isn't based on circumstances — it's based on the Lord, who doesn't change when your circumstances do.",
-      themes: ["joy","praise"] },
-    { ref: "Psalm 118:24",
-      reason: "Today is the day the LORD has made. Not yesterday, not tomorrow — today. Gratitude begins by noticing the gift you've already been given: this day, this breath, this moment.",
-      themes: ["thanksgiving","today"] },
-    { ref: "James 1:17",
-      reason: "Every good gift comes down from the Father of lights. When your heart is full of thanks, this verse is worth pausing on — tracing the good back upstream to its source.",
-      themes: ["gifts","praise"] },
-    { ref: "Psalm 107:1",
-      reason: "A simple, foundational verse of thanksgiving: He is good, and His mercy endures forever. When you're feeling grateful, sometimes the simplest words are the truest.",
-      themes: ["mercy","praise"] },
-    { ref: "Ephesians 5:20",
-      reason: "Giving thanks always for all things — this is Paul's picture of a life shaped by gratitude. Not thanks for the easy things only, but thanks woven through every part of life.",
-      themes: ["thanksgiving","worship"] },
-    { ref: "Psalm 9:1",
-      reason: "I will praise thee, O LORD, with my whole heart; I will shew forth all thy marvellous works. When gratitude rises in you, let it be loud, whole-hearted, and specific.",
-      themes: ["praise"] }
-  ],
-  Angry: [
-    { ref: "Ephesians 4:26-27",
-      reason: "Anger itself isn't sinful — Paul acknowledges that. The warning is what you do with it. Don't let it ferment overnight, and don't give it room to become something darker.",
-      themes: ["wrath","conflict"] },
-    { ref: "James 1:19-20",
-      reason: "James lays out a discipline: swift to hear, slow to speak, slow to wrath. The wrath of man, he warns, doesn't produce the righteousness of God — even when our anger feels justified.",
-      themes: ["wrath","patience","response"] },
-    { ref: "Proverbs 15:1",
-      reason: "Sometimes anger is a response to someone else's anger. This proverb gives you permission to be the one who breaks that cycle — a soft answer instead of matching heat with heat.",
-      themes: ["wrath","response","conflict"] },
-    { ref: "Proverbs 14:29",
-      reason: "Patience and wisdom travel together. The same restraint that slows your anger is the restraint that lets you see the situation clearly enough to respond well.",
-      themes: ["patience","wisdom"] },
-    { ref: "Proverbs 16:32",
-      reason: "Self-control is harder than conquest. Solomon places the person who rules their own spirit above the mighty warrior — because the inner battle is the harder one.",
-      themes: ["self-control","strength"] },
-    { ref: "Psalm 37:8",
-      reason: "Anger has a way of pulling you toward action you'll regret. The psalmist's counsel is simple: cease, forsake it, let it go — before it leads you somewhere you don't want to go.",
-      themes: ["wrath","release"] },
-    { ref: "Colossians 3:8",
-      reason: "Paul names anger alongside things we 'put off' — like clothes we used to wear. Whatever drew anger from you before doesn't have to define you now.",
-      themes: ["wrath","identity"] },
-    { ref: "Ecclesiastes 7:9",
-      reason: "A sobering line: anger resteth in the bosom of fools. Not that anger makes you foolish in a moment — but that letting it linger gives it room to settle in.",
-      themes: ["wrath","wisdom"] }
-  ]
-};
+const VERSE_LIBRARY = [
+  // ============ ANXIOUS =================================================
+  { ref: "Philippians 4:6-7", themes:["worry","prayer"],
+    moods:{ Anxious:{ reason:"When anxiety presses in, Paul invites you to lay every worry before God with thanksgiving. The promise that follows isn't the removal of trouble — it's a peace that guards your heart even when circumstances don't change." } },
+    modern: "Don't let anxiety run your life. Take what worries you to God in prayer — be specific, and be thankful while you ask. What you get back is a peace bigger than your own understanding, one that stands guard over your heart and thoughts." },
+  { ref: "Isaiah 41:10", themes:["fear","presence"],
+    moods:{ Anxious:{ reason:"Fear shrinks the world down to whatever's threatening you. This verse widens it — reminding you the God who holds the universe is also holding your hand." } },
+    modern: "Don't be afraid — I'm here with you. Don't keep glancing over your shoulder. I'm your God. I'll strengthen you, help you, and hold you up with the right hand of My righteousness." },
+  { ref: "1 Peter 5:7", themes:["worry","burden"],
+    moods:{ Anxious:{ reason:"You don't have to carry what you're carrying alone. Hand it off — not because it doesn't matter, but because He cares for you personally." } },
+    modern: "Hand everything you're worried about over to God — every concern, even the small ones — because He genuinely cares about what happens to you." },
+  { ref: "Matthew 6:34", themes:["future","worry"],
+    moods:{ Anxious:{ reason:"Anxiety almost always lives in tomorrow. Jesus gently pulls you back to today and promises grace will be there when tomorrow arrives." } },
+    modern: "Don't borrow trouble from tomorrow. Tomorrow will worry about itself when it gets here. Today already has enough of its own — focus there." },
+  { ref: "John 14:27", themes:["fear","peace"],
+    moods:{ Anxious:{ reason:"The peace Jesus offers doesn't depend on everything going right. It's a peace given in the middle of uncertainty — specifically so your heart wouldn't be troubled or afraid." } },
+    modern: "I'm leaving you peace — not the surface kind the world hands out, but My peace, the real thing. Don't let your heart get tangled up, and don't let it be afraid." },
+  { ref: "2 Timothy 1:7", themes:["fear","identity"],
+    moods:{ Anxious:{ reason:"Fear is loud, but it doesn't get to define you. What's actually been given to you is power, love, and a sound mind — a quiet identity fear cannot take." } },
+    modern: "God didn't give us a spirit of fear. What He gave us is power, love, and a clear, sound mind." },
+  { ref: "Psalm 94:19", themes:["worry","thoughts"],
+    moods:{ Anxious:{ reason:"When your thoughts are racing and multiplying inside you, this verse is honest about that experience — and points to God's comforts that steady an overwhelmed mind." } },
+    modern: "When the thoughts kept piling up inside me — anxious, racing — Your comforts brought my soul back to life." },
+  { ref: "Proverbs 3:5-6", themes:["trust","future","direction"],
+    moods:{
+      Anxious:{ reason:"Much of anxiety is the exhaustion of trying to figure everything out yourself. The invitation is to lean your weight on someone whose understanding is bigger than yours." },
+      Lost:{ reason:"When the path ahead isn't clear, the invitation isn't to figure it all out — it's to trust, to lean, and in every step to acknowledge Him. The promise is that He'll direct your paths." }
+    },
+    modern: "Trust God completely — don't try to figure everything out on your own logic. In whatever you do, keep Him in mind, and He'll set your paths straight." },
+  { ref: "Psalm 23:4", themes:["fear","comfort","presence"],
+    moods:{
+      Anxious:{ reason:"When anxiety feels like walking through a dark valley, this verse names the experience honestly — and answers it. You're not walking alone." },
+      Grieving:{ reason:"The shadow of death is real. But the verse insists on company even there — the shepherd's rod and staff are tools for staying close." }
+    },
+    modern: "Even when I walk through the darkest valley, I won't be afraid — because You are with me. Your rod and Your staff comfort me." },
+  { ref: "Psalm 56:3", themes:["fear","trust"],
+    moods:{ Anxious:{ reason:"Short and honest. The psalmist doesn't deny being afraid — he just names what he does with it: takes it to God." } },
+    modern: "Whenever I'm afraid, I'll put my trust in You." },
+  { ref: "Psalm 27:1", themes:["fear","light","courage"],
+    moods:{
+      Anxious:{ reason:"Fear narrows your world. This verse widens it — placing God Himself as your light and your salvation." },
+      Lost:{ reason:"When you can't see the way, this verse calls God your light. Salvation isn't just a destination — it's an illumination that comes with you." }
+    },
+    modern: "The Lord is my light and my salvation — who should I be afraid of? The Lord is the strength of my life — who should I fear?" },
+  { ref: "Psalm 46:1", themes:["refuge","strength","trouble"],
+    moods:{
+      Anxious:{ reason:"When trouble closes in, God isn't distant — He's a present help, already here." },
+      Grieving:{ reason:"Grief is its own kind of trouble. This verse promises God isn't far off in your sorrow — He's near, at hand." }
+    },
+    modern: "God is our refuge and our strength — a very present help in trouble." },
+  { ref: "Psalm 46:10", themes:["stillness","trust"],
+    moods:{ Anxious:{ reason:"Sometimes anxiety needs a command before it'll listen. This is one: be still. Know that He is God — and that you're not." } },
+    modern: "Stop. Be still. Know that I am God." },
+  { ref: "Psalm 121:1-2", themes:["help","trust","direction"],
+    moods:{
+      Anxious:{ reason:"When you don't know where to look for help, this psalm answers — to the hills, to the Maker of heaven and earth. The source matches the size of the problem." },
+      Lost:{ reason:"When the path isn't clear, the psalmist lifts his eyes — and finds his help in the Maker of heaven and earth." }
+    },
+    modern: "I lift my eyes up to the hills — where does my help come from? My help comes from the Lord, the Maker of heaven and earth." },
+  { ref: "Isaiah 26:3", themes:["peace","mind","trust"],
+    moods:{ Anxious:{ reason:"Perfect peace, kept by God — for the mind that's settled on Him. Anxiety can't share that space. This is the invitation to settle." } },
+    modern: "You'll keep him in perfect peace whose mind is fixed on You, because he trusts in You." },
+  { ref: "Isaiah 43:1-2", themes:["fear","identity","presence"],
+    moods:{ Anxious:{ reason:"He calls you by name. The waters and the fire are real — but they're not the end of the story, because He's gone through them with you." } },
+    modern: "Don't be afraid — I've redeemed you. I've called you by name. You belong to Me. When you pass through the waters, I'll be with you. When you walk through fire, you won't be burned." },
+  { ref: "Mark 4:39-40", themes:["storm","fear","faith"],
+    moods:{ Anxious:{ reason:"Jesus speaks to the storm — and then to the disciples. The question He asks is worth sitting with: 'Why are ye so fearful?'" } },
+    modern: "He stood up, told the wind off, and said to the sea, 'Peace, be still.' The wind died down, and there was a great calm. Then He said, 'Why are you so afraid? How is it that you have no faith?'" },
+  { ref: "Hebrews 13:5-6", themes:["presence","provision"],
+    moods:{ Anxious:{ reason:"Anxiety often whispers, 'You'll be left.' This verse answers from God Himself — He will never leave, never forsake. So you can say: the Lord is my helper, and I will not fear." } },
+    modern: "He has said: I will never leave you, nor will I ever forsake you. So we can say with confidence: the Lord is my helper. I will not be afraid." },
+  { ref: "Romans 8:38-39", themes:["love","security"],
+    moods:{
+      Anxious:{ reason:"Whatever you fear losing, this verse rules out the worst loss: nothing can separate you from God's love. That's the floor underneath all your other anxieties." },
+      Hopeful:{ reason:"Paul piles up a list of everything that could come between you and God — and concludes none of it can. That's the bedrock of every other hope." }
+    },
+    modern: "I'm convinced that nothing — not death, not life, not angels, not rulers, not anything present or future, not any power, not height or depth, nothing in all creation — can separate us from God's love in Christ Jesus our Lord." },
+  { ref: "Psalm 4:8", themes:["sleep","peace","safety"],
+    moods:{ Anxious:{ reason:"Anxiety often comes out at night. This is a verse to read at the end of the day — God alone is what makes you safe, and that's enough to lie down with." } },
+    modern: "I'll lie down in peace and sleep, because You alone, Lord, make me dwell in safety." },
+  { ref: "Joshua 1:9", themes:["courage","presence"],
+    moods:{
+      Anxious:{ reason:"God commanded courage four times in this chapter. The reason never changes: 'I am with thee whithersoever thou goest.'" },
+      Lost:{ reason:"Joshua was about to lead people into unfamiliar territory. The strength came from one fact — God Himself was going with him. Same for you." }
+    },
+    modern: "Haven't I commanded you? Be strong and brave. Don't be afraid or discouraged — because the Lord your God is with you wherever you go." },
+  { ref: "Psalm 34:4", themes:["seeking","fear","deliverance"],
+    moods:{ Anxious:{ reason:"The simplicity here matters: the psalmist sought, and was heard. He didn't earn it; he asked. The result was deliverance from all his fears." } },
+    modern: "I sought the Lord. He answered me, and delivered me from all my fears." },
+  { ref: "Psalm 55:22", themes:["burden","worry"],
+    moods:{ Anxious:{ reason:"There's a transaction here — cast your burden, and He sustains. The first half is your job. The second half is His." } },
+    modern: "Cast your burden on the Lord, and He'll sustain you. He'll never let the righteous be shaken." },
+  { ref: "Lamentations 3:25-26", themes:["waiting","seeking","trust"],
+    moods:{
+      Anxious:{ reason:"When anxiety wants you to act NOW, this verse counsels waiting — quietly, hopefully. Waiting isn't passive; it's a kind of trust." },
+      Hopeful:{ reason:"It is good that a man both hope and quietly wait. Hope and quiet patience travel together — they're the same posture under different conditions." }
+    },
+    modern: "The Lord is good to those who wait for Him, to the soul who seeks Him. It is good to both hope and quietly wait for the salvation of the Lord." },
+  { ref: "Psalm 91:1-2", themes:["refuge","shelter","trust"],
+    moods:{ Anxious:{ reason:"Two of the most protective images in Scripture stacked together — the secret place of the Most High and the shadow of the Almighty. This is what trust feels like from the inside." } },
+    modern: "Whoever lives in the secret place of the Most High will rest in the shadow of the Almighty. I'll say of the Lord, 'He is my refuge and my fortress, my God, in Him I trust.'" },
+  { ref: "Deuteronomy 31:6", themes:["courage","presence","fear"],
+    moods:{
+      Anxious:{ reason:"Moses spoke these words to people about to enter unknown territory. The promise is for you too: God Himself goes with you and won't fail or forsake." },
+      Lost:{ reason:"When the path is unclear, this verse anchors you — the One leading you has promised to never leave. That's the only certainty you need to take the next step." }
+    },
+    modern: "Be strong and brave. Don't be afraid or in dread — because the Lord your God is the One who goes with you. He won't fail you. He won't forsake you." },
+
+  // ============ GRIEVING ================================================
+  { ref: "Psalm 34:18", themes:["loss","broken"],
+    moods:{ Grieving:{ reason:"Grief can feel like God's gone silent. This verse says the opposite — He draws nearer to broken hearts, not further away." } },
+    modern: "God is close to people whose hearts are broken. He saves the ones whose spirit feels crushed." },
+  { ref: "Matthew 5:4", themes:["loss","mourning"],
+    moods:{ Grieving:{ reason:"Jesus doesn't rush past sorrow. He calls mourners blessed and promises comfort — not as a platitude, but as a real thing that meets you in your tears." } },
+    modern: "There's a blessing for those who mourn — they will be comforted." },
+  { ref: "Revelation 21:4", themes:["death","hope","eternity"],
+    moods:{ Grieving:{ reason:"The promise Christians hold in grief: tears, death, sorrow, and pain are temporary. One day God Himself wipes every tear — and the reunion you're longing for will be real." } },
+    modern: "God Himself will wipe every tear from your eyes. Death will be gone. So will sorrow, crying, and pain — all the old order of things will have passed away." },
+  { ref: "John 14:1-3", themes:["death","hope","family"],
+    moods:{ Grieving:{ reason:"Jesus spoke these words to friends about to lose Him. He doesn't deny the pain — He points past it to a prepared place and a reunion grief cannot undo." } },
+    modern: "Don't let your heart fall apart. Trust God, and trust Me too. My Father's house has plenty of rooms — if that weren't true, I would have told you. I'm going there to prepare a place for you, and after I do, I'm coming back to bring you with Me." },
+  { ref: "Psalm 147:3", themes:["broken","healing"],
+    moods:{ Grieving:{ reason:"Short but carries a lot. God heals the broken-hearted; He binds up wounds. Not dismisses, not minimizes — binds them up, gently, over time." } },
+    modern: "He heals the broken-hearted. He gently binds up their wounds." },
+  { ref: "2 Corinthians 1:3-4", themes:["loss","comfort"],
+    moods:{ Grieving:{ reason:"The God of all comfort meets you in this — and one day the comfort you receive becomes comfort you pass on to someone walking through their own loss." } },
+    modern: "Blessed be God — the Father of compassion, the God who comforts. He comforts us in every hard thing we go through, so we can offer the same comfort to others walking through pain." },
+  { ref: "John 11:25-26", themes:["death","hope","eternity"],
+    moods:{ Grieving:{ reason:"At Lazarus's tomb, Jesus made the boldest claim anyone has ever made about death. For those who trust Him, grief is real — but it isn't the final word." } },
+    modern: "Jesus said: I am the resurrection and the life. Anyone who believes in Me will live, even if they die. And anyone who lives believing in Me will never really die. Do you believe this?" },
+  { ref: "Lamentations 3:22-23", themes:["mourning","mercy"],
+    moods:{ Grieving:{ reason:"Even in a book of lament, this verse breaks through: His mercies are new every morning. Grief comes in waves — so does grace, fresh for whatever today holds." } },
+    modern: "It's only because of God's mercy that we aren't completely overwhelmed — His compassion never runs out. It's brand new every morning. Your faithfulness is enormous." },
+  { ref: "Psalm 30:5", themes:["mourning","joy","morning"],
+    moods:{ Grieving:{ reason:"Weeping is honest — and finite. Joy doesn't always come tomorrow, but Scripture insists that morning is real and on its way." } },
+    modern: "Weeping may last for the night, but joy comes in the morning." },
+  { ref: "Psalm 56:8", themes:["tears","presence"],
+    moods:{ Grieving:{ reason:"You aren't crying alone or unseen. Every wandering and every tear is tracked, kept, remembered by God Himself." } },
+    modern: "You've kept count of my tossing. Put my tears in Your bottle — aren't they already in Your book?" },
+  { ref: "Isaiah 53:3-4", themes:["sorrow","companion"],
+    moods:{ Grieving:{ reason:"Jesus is called a man of sorrows, acquainted with grief. Whatever you're carrying, He has carried — and He carries it with you now." } },
+    modern: "He was despised and rejected — a man of sorrows, acquainted with grief. He carried our sorrows. He bore our griefs." },
+  { ref: "Isaiah 61:1-3", themes:["mourning","comfort","beauty"],
+    moods:{ Grieving:{ reason:"Beauty for ashes. The oil of joy for mourning. Praise for heaviness. The exchange isn't fair, but it's the one God offers." } },
+    modern: "The Spirit of the Lord is on Me — to comfort all who mourn, to give them beauty instead of ashes, the oil of joy instead of mourning, a garment of praise instead of a spirit of heaviness." },
+  { ref: "Job 1:21", themes:["loss","worship","surrender"],
+    moods:{ Grieving:{ reason:"Job's response to devastating loss isn't denial or rage — it's worship. Hard, real, and not the only valid response, but a costly one worth sitting with." } },
+    modern: "Naked I came from my mother's womb, and naked I'll return. The Lord gave, and the Lord has taken away. Blessed be the name of the Lord." },
+  { ref: "1 Thessalonians 4:13-14", themes:["death","hope"],
+    moods:{ Grieving:{ reason:"Paul doesn't tell Christians not to grieve — he tells us not to grieve as those without hope. The sorrow is real. So is the hope." } },
+    modern: "I don't want you to be uninformed about those who have died, so you won't grieve like people who have no hope. We believe Jesus died and rose — so God will bring with Him those who have fallen asleep in Him." },
+  { ref: "1 Corinthians 15:55-57", themes:["death","victory","resurrection"],
+    moods:{ Grieving:{ reason:"Paul taunts death itself. Where's your sting? Where's your victory? Because of Christ, the loss is real but the win is already settled." } },
+    modern: "Death, where's your sting? Grave, where's your victory? Thanks be to God who gives us the victory through our Lord Jesus Christ." },
+  { ref: "Psalm 116:15", themes:["death","preciousness"],
+    moods:{ Grieving:{ reason:"The death of a believer isn't unnoticed or trivial in heaven. It's precious to God. The person you've lost matters infinitely to Him." } },
+    modern: "Precious in the sight of the Lord is the death of His saints." },
+  { ref: "John 16:22", themes:["sorrow","reunion","joy"],
+    moods:{ Grieving:{ reason:"Jesus tells His disciples sorrow is coming — and so is a joy no one will take from them. The order matters: sorrow now, joy later, but the joy is permanent." } },
+    modern: "Right now you have sorrow — but I'll see you again, and your heart will rejoice, and no one will take your joy from you." },
+  { ref: "2 Corinthians 4:17-18", themes:["suffering","eternity"],
+    moods:{ Grieving:{ reason:"Paul calls real suffering 'light affliction' compared to what's coming. That's not minimizing — that's seeing it from the other side." } },
+    modern: "Our light and momentary trouble is producing for us an eternal weight of glory that vastly outweighs them all. We don't look at what's seen, but at what's unseen — because what's seen is temporary, but what's unseen is eternal." },
+  { ref: "Job 19:25-26", themes:["resurrection","redemption"],
+    moods:{ Grieving:{ reason:"In the middle of unbearable loss, Job grasps a hope that hadn't even been clearly revealed yet — a Redeemer who lives, a body that will rise." } },
+    modern: "I know that my Redeemer lives, and at the end He'll stand on the earth. After my skin has been destroyed, yet in my flesh I'll see God." },
+  { ref: "Isaiah 25:8", themes:["death","tears","victory"],
+    moods:{ Grieving:{ reason:"Isaiah's old promise points to the same scene as Revelation 21 — death swallowed up, tears wiped away. The picture has been ahead of us for a very long time." } },
+    modern: "He'll swallow up death forever, and the Lord God will wipe away tears from every face." },
+  { ref: "Psalm 42:11", themes:["sorrow","hope","soul"],
+    moods:{
+      Grieving:{ reason:"The psalmist talks to his own soul — naming the sorrow, then redirecting it toward hope. Both can be true at the same time." },
+      Hopeful:{ reason:"Why are you cast down, O my soul? The question is rhetorical — the answer is to hope in God, who is still your help and your God." }
+    },
+    modern: "Why are you so downcast, my soul? Why so disturbed inside me? Hope in God — for I'll yet praise Him, my Savior and my God." },
+  { ref: "Hebrews 4:15-16", themes:["sorrow","mercy","presence"],
+    moods:{ Grieving:{ reason:"Jesus isn't a distant priest who doesn't get it. He's been weak. He's been tempted. So you can approach Him in your grief without performing anything." } },
+    modern: "We don't have a high priest who can't sympathize with our weaknesses — He was tempted in every way, just like us, yet without sin. So let's come boldly to the throne of grace, to find mercy and grace to help in time of need." },
+
+  // ============ HOPEFUL =================================================
+  { ref: "Jeremiah 29:11", themes:["future","plans"],
+    moods:{ Hopeful:{ reason:"A verse worth reading slowly. God's thoughts toward you are thoughts of peace — an expected end, a future. Hope isn't wishful thinking; it's trust in the One planning ahead for you." } },
+    modern: "I know the plans I have for you, says the Lord — plans for your good, not to harm you. Plans to give you a future and a hope." },
+  { ref: "Romans 15:13", themes:["faith","joy"],
+    moods:{ Hopeful:{ reason:"The God of hope fills you with joy and peace in believing — so your hope can abound. This is hope that grows, not shrinks, the longer you walk with Him." } },
+    modern: "May the God of hope fill you with every kind of joy and peace as you trust Him, so you overflow with hope through the power of the Holy Spirit." },
+  { ref: "Romans 8:28", themes:["trust","future","suffering"],
+    moods:{ Hopeful:{ reason:"This isn't a promise that everything is good — it's a promise that God is working all of it together for good. The hard parts of your story aren't wasted in His hands." } },
+    modern: "We know that God works all things together for good — for those who love Him and are walking in the purpose He called them to." },
+  { ref: "Isaiah 40:31", themes:["strength","waiting"],
+    moods:{ Hopeful:{ reason:"Hope in Scripture is tied to waiting — and waiting well renews strength. Eagles' wings, running without weariness, walking without fainting — for those who keep their eyes on Him." } },
+    modern: "Those who wait on the Lord will have their strength renewed. They'll rise up like eagles. They'll run and not get exhausted. They'll walk and not faint." },
+  { ref: "Hebrews 11:1", themes:["faith"],
+    moods:{ Hopeful:{ reason:"A definition worth memorizing: faith is the substance of things hoped for. What you hope for isn't unreal — it's real enough that faith treats it as substance today." } },
+    modern: "Faith is the substance of what we hope for. It's the evidence of what we can't yet see." },
+  { ref: "1 Peter 1:3", themes:["resurrection","faith"],
+    moods:{ Hopeful:{ reason:"Peter calls it 'a lively hope' — alive, not theoretical. It's grounded in the resurrection of Jesus, the strongest evidence there is that death doesn't have the last word." } },
+    modern: "Blessed be God, the Father of our Lord Jesus Christ — by His great mercy, He's given us a brand new life and a living hope through Jesus rising from the dead." },
+  { ref: "Psalm 27:14", themes:["waiting","courage"],
+    moods:{ Hopeful:{ reason:"Wait on the LORD. Be of good courage. Wait, I say, on the LORD. Twice the psalmist repeats it — because hope takes practice, and courage grows while we're still waiting." } },
+    modern: "Wait on the Lord. Be courageous, and He'll strengthen your heart. I'm telling you — wait on the Lord." },
+  { ref: "Romans 5:3-5", themes:["suffering","perseverance"],
+    moods:{ Hopeful:{ reason:"Paul traces the strange path hope takes: tribulation produces patience, patience produces experience, experience produces hope — and hope does not make us ashamed." } },
+    modern: "We even celebrate the hard times, because we know hardship grows patience, patience grows experience, and experience grows hope — and hope never disappoints, because God's love has been poured into our hearts through the Holy Spirit." },
+  { ref: "Psalm 33:18", themes:["hope","mercy"],
+    moods:{ Hopeful:{ reason:"The eye of the Lord is on those who hope in His mercy. To hope in His mercy is to be specifically seen, specifically attended to." } },
+    modern: "The Lord's eye is on those who fear Him, on those who hope in His mercy." },
+  { ref: "Psalm 71:14", themes:["hope","praise"],
+    moods:{ Hopeful:{ reason:"Hope can be a stance, a posture, a daily choice. The psalmist names it: I will hope continually, and praise more and more." } },
+    modern: "I'll hope continually — and I'll praise You more and more." },
+  { ref: "Proverbs 23:18", themes:["future","expectation"],
+    moods:{ Hopeful:{ reason:"There's an end. Your expectation will not be cut off. Some promises are short and pointed, and this one is both." } },
+    modern: "There is surely a future — and your hope will not be cut off." },
+  { ref: "Romans 12:12", themes:["joy","patience"],
+    moods:{ Hopeful:{ reason:"Three short commands in one verse — rejoice in hope, be patient in suffering, keep praying. The order of life when it's hard but not hopeless." } },
+    modern: "Rejoice in hope. Be patient in tribulation. Keep on praying." },
+  { ref: "Hebrews 6:19", themes:["anchor","hope"],
+    moods:{ Hopeful:{ reason:"Hope as an anchor — not optimism, but a thing that holds. Steady and certain, even when the storm above the surface is fierce." } },
+    modern: "We have this hope as an anchor for the soul — firm and secure." },
+  { ref: "Hebrews 10:23", themes:["faith","perseverance"],
+    moods:{ Hopeful:{ reason:"Hold fast. Don't waver. He who promised is faithful. The verse pivots on God's character, not yours." } },
+    modern: "Let's hold tight to the hope we profess, without wavering — because the One who promised is faithful." },
+  { ref: "Titus 2:13", themes:["expectation","return"],
+    moods:{ Hopeful:{ reason:"The 'blessed hope' Paul names is a specific thing — the appearing of our great God and Savior. Hope has a face." } },
+    modern: "Looking for that blessed hope — the glorious appearing of our great God and Savior, Jesus Christ." },
+  { ref: "2 Corinthians 4:8-9", themes:["suffering","resilience"],
+    moods:{ Hopeful:{ reason:"Pressed but not crushed. Perplexed but not in despair. The verse acknowledges the squeeze and then names what the squeeze cannot do to you." } },
+    modern: "We're pressed on every side but not crushed. Perplexed, but not in despair. Persecuted, but not abandoned. Knocked down, but not destroyed." },
+  { ref: "Romans 4:18", themes:["faith","promise"],
+    moods:{ Hopeful:{ reason:"Abraham hoped against hope — believed when there was nothing visible to believe in. That's the kind of hope God meets and rewards." } },
+    modern: "Against all hope, in hope he believed — and so became the father of many nations." },
+  { ref: "Isaiah 43:18-19", themes:["new","future"],
+    moods:{ Hopeful:{ reason:"Don't keep replaying the past. God is doing a new thing — already, right now. The question is whether you see it." } },
+    modern: "Don't remember the old things, don't keep dwelling on the past. I'm doing a new thing — it's already springing up. Don't you see it?" },
+  { ref: "Lamentations 3:24", themes:["portion","hope"],
+    moods:{ Hopeful:{ reason:"When you have nothing else, you have Him. The Lord Himself is your portion — and that's why you hope." } },
+    modern: "The Lord is my portion, my soul says. Therefore I'll hope in Him." },
+  { ref: "Micah 7:7", themes:["waiting","salvation"],
+    moods:{ Hopeful:{ reason:"In a chapter about a broken world, Micah pivots: I will look. I will wait. My God will hear. Hope refusing to look down." } },
+    modern: "As for me, I'll look to the Lord. I'll wait for the God of my salvation. My God will hear me." },
+  { ref: "Colossians 1:27", themes:["mystery","hope"],
+    moods:{ Hopeful:{ reason:"Christ in you, the hope of glory. The hope isn't outside you, far off — it's inside you, present, alive." } },
+    modern: "The mystery, made known: Christ in you, the hope of glory." },
+  { ref: "Psalm 31:24", themes:["courage","hope"],
+    moods:{ Hopeful:{ reason:"Courage and hope go together. The verse promises a strengthened heart — past tense almost, certain enough to count on." } },
+    modern: "Be courageous, and He'll strengthen your heart — all of you who hope in the Lord." },
+
+  // ============ LOST ====================================================
+  { ref: "Psalm 119:105", themes:["direction","word"],
+    moods:{ Lost:{ reason:"God rarely gives floodlights on the whole road. His word is a lamp — enough light for the next step, and then the next. That's usually all you need to keep walking." } },
+    modern: "Your word is a lamp for my feet — a light along my path." },
+  { ref: "John 14:6", themes:["direction","identity"],
+    moods:{ Lost:{ reason:"When you feel lost, this verse cuts through the noise. Jesus doesn't just point to a way — He says He is the way. Finding Him is finding yourself." } },
+    modern: "Jesus said: I am the way, the truth, and the life. No one comes to the Father except through Me." },
+  { ref: "Psalm 32:8", themes:["direction","guidance"],
+    moods:{ Lost:{ reason:"A tender promise from God Himself: I'll instruct, I'll teach, I'll guide. You're being watched over, not left to wander." } },
+    modern: "I'll instruct you. I'll teach you the way you should go. I'll guide you, keeping My eye on you." },
+  { ref: "James 1:5", themes:["wisdom","decision"],
+    moods:{ Lost:{ reason:"If you don't know what to do — ask. God gives wisdom liberally, doesn't shame you for needing it. That alone should make asking easier." } },
+    modern: "If you're lacking wisdom, ask God. He gives generously to everyone, without scolding — and you'll receive it." },
+  { ref: "Isaiah 30:21", themes:["direction","guidance"],
+    moods:{ Lost:{ reason:"You won't always see the way forward before you take the step. Often God's guidance comes like a voice behind you — 'this is the way' — after you've started moving." } },
+    modern: "Your ears will hear a voice behind you saying, 'This is the way — walk in it' — whether you turn right or left." },
+  { ref: "Luke 15:4-6", themes:["identity","belonging"],
+    moods:{ Lost:{ reason:"Jesus's own answer to feeling lost. The shepherd doesn't wait for the sheep to find its way home — He goes looking. That's the God you belong to." } },
+    modern: "Imagine you had a hundred sheep and lost one. Wouldn't you leave the ninety-nine and go look for it? When you found it, you'd carry it home rejoicing — and call your friends over: rejoice with me, I've found my lost sheep." },
+  { ref: "Psalm 23:1-3", themes:["direction","identity","rest"],
+    moods:{ Lost:{ reason:"The most famous shepherd passage in the Bible is for moments exactly like this one. He leads. He restores. He makes you lie down when you need it most." } },
+    modern: "The Lord is my shepherd — I have everything I need. He has me lie down in green pastures. He leads me beside still waters. He restores my soul. He guides me along right paths, for the sake of His name." },
+  { ref: "Jeremiah 33:3", themes:["calling","wisdom"],
+    moods:{ Lost:{ reason:"Call to Me — and I'll answer, and show you great things you don't know. The verse assumes you don't know yet. That's fine. You're invited to ask anyway." } },
+    modern: "Call to Me, and I'll answer you — and I'll show you great and mighty things, things you don't know." },
+  { ref: "Jeremiah 29:13", themes:["seeking","finding"],
+    moods:{ Lost:{ reason:"You'll find Him when you search with your whole heart. Not 'when you've figured it out' — when you seek." } },
+    modern: "You'll seek Me and find Me — when you search for Me with all your heart." },
+  { ref: "Matthew 7:7-8", themes:["asking","seeking"],
+    moods:{ Lost:{ reason:"Ask, seek, knock. The verbs are all things you actively do. The promise is that the door opens — every time, for every person who knocks." } },
+    modern: "Ask, and it'll be given to you. Seek, and you'll find. Knock, and the door will open. Everyone who asks receives. Everyone who seeks finds. To everyone who knocks, the door opens." },
+  { ref: "Matthew 11:28-30", themes:["rest","burden","invitation"],
+    moods:{ Lost:{ reason:"Come unto me — the simplest invitation in Scripture. When you don't know where else to go, this is the door. The yoke offered is easy. The burden is light." } },
+    modern: "Come to Me, all of you who are worn out and carrying heavy loads — I'll give you rest. Take My yoke on you and learn from Me, because I'm gentle and humble in heart, and you'll find rest for your souls. My yoke is easy, and My burden is light." },
+  { ref: "Psalm 25:4-5", themes:["learning","direction"],
+    moods:{ Lost:{ reason:"A prayer to make your own when you're lost: show me Your ways, teach me Your paths. Lead me in Your truth." } },
+    modern: "Show me Your ways, Lord. Teach me Your paths. Lead me in Your truth and teach me — You are the God of my salvation. I wait for You all day long." },
+  { ref: "Psalm 73:23-24", themes:["guidance","presence"],
+    moods:{ Lost:{ reason:"He holds your right hand. He guides with His counsel. And after that, He receives you to glory. The whole arc is covered." } },
+    modern: "I'm continually with You — You hold me by my right hand. You guide me with Your counsel, and afterward You'll receive me to glory." },
+  { ref: "Psalm 139:23-24", themes:["searching","leading"],
+    moods:{ Lost:{ reason:"Sometimes being lost is about not knowing what's inside you. This is a brave prayer — search me, see if there's a wrong way in me, lead me in the way everlasting." } },
+    modern: "Search me, God, and know my heart. Test me and know my thoughts. See if there's any harmful way in me, and lead me in the way everlasting." },
+  { ref: "Proverbs 16:9", themes:["direction","planning"],
+    moods:{ Lost:{ reason:"You can plan your way. The Lord directs your steps. Both are real — but only one of them has the final say." } },
+    modern: "A person plans their way — but the Lord directs their steps." },
+  { ref: "Romans 8:14", themes:["identity","leading"],
+    moods:{ Lost:{ reason:"Being led by God's Spirit is a marker of who you are. You're not lost in the deepest sense — you're being led, even when you can't trace the steps." } },
+    modern: "All those who are led by the Spirit of God — they are the children of God." },
+  { ref: "Ephesians 2:10", themes:["purpose","identity"],
+    moods:{ Lost:{ reason:"You're His workmanship. There are good works God prepared in advance for you to walk in. Not random, not accidental — already prepared, already yours." } },
+    modern: "We're God's workmanship, created in Christ Jesus for good works — works God prepared in advance for us to walk in." },
+  { ref: "1 Corinthians 2:9", themes:["future","mystery"],
+    moods:{ Lost:{ reason:"What He's prepared for you is bigger than what your eye has seen or your ear has heard. The path may be unclear; the destination is staggering." } },
+    modern: "Eye hasn't seen, and ear hasn't heard, and no human mind has imagined the things God has prepared for those who love Him." },
+  { ref: "Isaiah 55:8-9", themes:["wisdom","mystery"],
+    moods:{ Lost:{ reason:"Sometimes you feel lost because His ways aren't yours. That's not failure on your part — it's an invitation to trust a bigger logic than your own." } },
+    modern: "My thoughts aren't your thoughts. My ways aren't your ways, says the Lord. As the heavens are higher than the earth, so are My ways higher than your ways, and My thoughts higher than your thoughts." },
+  { ref: "Psalm 16:11", themes:["path","joy"],
+    moods:{ Lost:{ reason:"He shows the path of life. In His presence — fullness of joy. At His right hand — pleasures forevermore. The path leads somewhere specific." } },
+    modern: "You'll show me the path of life. In Your presence is fullness of joy. At Your right hand are pleasures forevermore." },
+  { ref: "Psalm 25:9", themes:["humility","teaching"],
+    moods:{ Lost:{ reason:"The meek He guides in judgment. He teaches the meek His way. Being lost can humble you — and that's exactly the posture He guides best." } },
+    modern: "He guides the humble in what is right, and teaches them His way." },
+  { ref: "Hebrews 12:1-2", themes:["focus","perseverance"],
+    moods:{ Lost:{ reason:"When you're disoriented, the answer is direction. Look unto Jesus — the author and finisher of your faith. Run your race with Him in view." } },
+    modern: "Let's lay aside every weight and the sin that so easily entangles, and run the race set before us with endurance — looking to Jesus, the author and finisher of our faith." },
+  { ref: "Philippians 3:13-14", themes:["forgetting","pressing"],
+    moods:{ Lost:{ reason:"Forget what's behind. Reach for what's ahead. Press toward the goal. Lostness often resolves by movement, not by figuring everything out first." } },
+    modern: "Forgetting what's behind and reaching toward what's ahead, I press on toward the goal — for the prize of God's upward call in Christ Jesus." },
+  { ref: "Galatians 5:25", themes:["spirit","walking"],
+    moods:{ Lost:{ reason:"If you live in the Spirit, walk in the Spirit. The starting point and the path are the same — keep step." } },
+    modern: "Since we live by the Spirit, let's also keep in step with the Spirit." },
+  { ref: "John 10:27", themes:["identity","shepherd"],
+    moods:{ Lost:{ reason:"My sheep hear My voice. I know them. They follow Me. Jesus describes the relationship as a back-and-forth that you're already part of." } },
+    modern: "My sheep hear My voice, and I know them, and they follow Me." },
+
+  // ============ GRATEFUL ================================================
+  { ref: "Psalm 100:4-5", themes:["praise","thanksgiving"],
+    moods:{ Grateful:{ reason:"Thanksgiving is the gate, praise is the courts — the posture this psalm invites you into. Gratitude isn't just a feeling; it's a way of approaching God." } },
+    modern: "Walk through His gates with thanksgiving. Walk into His courts with praise. Thank Him. Bless His name. The Lord is good — His mercy lasts forever — His faithfulness endures through every generation." },
+  { ref: "1 Thessalonians 5:16-18", themes:["thanksgiving","joy"],
+    moods:{ Grateful:{ reason:"Rejoice evermore. Pray without ceasing. In every thing give thanks. Three short commands describing a heart that's learned the rhythm of gratitude." } },
+    modern: "Rejoice always. Pray without stopping. In everything, give thanks — because this is God's will for you in Christ Jesus." },
+  { ref: "Philippians 4:4", themes:["joy","praise"],
+    moods:{ Grateful:{ reason:"Paul wrote this from prison. The rejoicing isn't based on circumstances — it's based on the Lord, who doesn't change when your circumstances do." } },
+    modern: "Rejoice in the Lord always. And again I'll say — rejoice." },
+  { ref: "Psalm 118:24", themes:["thanksgiving","today"],
+    moods:{ Grateful:{ reason:"Today is the day the LORD has made. Not yesterday, not tomorrow — today. Gratitude begins by noticing the gift already given: this day, this breath, this moment." } },
+    modern: "This is the day the Lord has made. Let's celebrate it. Let's be glad in it." },
+  { ref: "James 1:17", themes:["gifts","praise"],
+    moods:{ Grateful:{ reason:"Every good gift comes down from the Father of lights. When your heart is full of thanks, this verse is worth pausing on — tracing the good back upstream to its source." } },
+    modern: "Every good gift and every perfect gift comes from above — from the Father of lights, who doesn't change, with no shifting shadows in Him." },
+  { ref: "Psalm 107:1", themes:["mercy","praise"],
+    moods:{ Grateful:{ reason:"A simple, foundational verse of thanksgiving: He is good, and His mercy endures forever. When you're grateful, sometimes the simplest words are the truest." } },
+    modern: "Give thanks to the Lord — He is good. His mercy lasts forever." },
+  { ref: "Ephesians 5:20", themes:["thanksgiving","worship"],
+    moods:{ Grateful:{ reason:"Giving thanks always for all things — Paul's picture of a life shaped by gratitude. Not thanks for easy things only, but thanks woven through every part of life." } },
+    modern: "Give thanks always for everything to God the Father — in the name of our Lord Jesus Christ." },
+  { ref: "Psalm 9:1", themes:["praise"],
+    moods:{ Grateful:{ reason:"I will praise thee, O LORD, with my whole heart. When gratitude rises in you, let it be loud, whole-hearted, and specific." } },
+    modern: "I'll praise You, Lord, with my whole heart. I'll declare every one of Your marvelous works." },
+  { ref: "Psalm 103:1-2", themes:["praise","memory"],
+    moods:{ Grateful:{ reason:"Bless the Lord, O my soul. The psalmist commands his own heart not to forget — name the benefits, count them, hold them up." } },
+    modern: "Bless the Lord, my soul — and everything in me, bless His holy name. Bless the Lord, my soul, and don't forget any of His benefits." },
+  { ref: "Psalm 95:1-2", themes:["praise","singing"],
+    moods:{ Grateful:{ reason:"Come, sing. Make a joyful noise. The first move of gratitude is to gather and lift up the rock of our salvation." } },
+    modern: "Come, let's sing to the Lord — let's make a joyful noise to the Rock of our salvation. Let's come before His presence with thanksgiving, and make a joyful noise to Him with psalms." },
+  { ref: "Psalm 136:1", themes:["thanksgiving","mercy"],
+    moods:{ Grateful:{ reason:"The whole psalm repeats the same refrain — His mercy endures forever. It's worth repeating. Some truths only land after being said a dozen times." } },
+    modern: "Give thanks to the Lord — He is good — His mercy endures forever." },
+  { ref: "Colossians 3:15-17", themes:["peace","thankfulness"],
+    moods:{ Grateful:{ reason:"Let the peace of God rule in your hearts. Be thankful. Do everything in the name of the Lord Jesus, giving thanks to God the Father through Him." } },
+    modern: "Let the peace of God rule in your hearts — you were called to it in one body. And be thankful. Whatever you do, in word or action, do it all in the name of the Lord Jesus, giving thanks to God the Father through Him." },
+  { ref: "Colossians 2:6-7", themes:["thanksgiving","rooted"],
+    moods:{ Grateful:{ reason:"Rooted, built up, established in faith — and abounding with thanksgiving. Gratitude is a sign of a settled soul." } },
+    modern: "As you've received Christ Jesus the Lord, walk in Him — rooted and built up in Him, established in faith just as you were taught, abounding in it with thanksgiving." },
+  { ref: "Psalm 92:1-2", themes:["thanksgiving","morning","evening"],
+    moods:{ Grateful:{ reason:"It is a good thing to give thanks. Morning and evening — bracket your day with thanksgiving and praise." } },
+    modern: "It's a good thing to give thanks to the Lord, and to sing praises to Your name, Most High — to declare Your lovingkindness in the morning, and Your faithfulness every night." },
+  { ref: "Psalm 145:1-3", themes:["praise","greatness"],
+    moods:{ Grateful:{ reason:"Every day will I bless Thee. Praise Thy name forever and ever. Some gratitude takes the long view." } },
+    modern: "I'll exalt You, my God and King — I'll bless Your name forever and ever. Every day I'll bless You. I'll praise Your name forever and ever. The Lord is great, and greatly to be praised. His greatness is unsearchable." },
+  { ref: "Hebrews 13:15", themes:["sacrifice","praise"],
+    moods:{ Grateful:{ reason:"By Him, let us offer the sacrifice of praise to God continually. Praise costs something. Gratitude isn't always cheap; this verse honors that." } },
+    modern: "Through Him, then, let's continually offer up a sacrifice of praise to God — that is, the fruit of lips that confess His name." },
+  { ref: "Psalm 30:11-12", themes:["mourning","joy","praise"],
+    moods:{ Grateful:{ reason:"Turning mourning into dancing — and the right response is sustained praise, not silence. Don't let gratitude be temporary." } },
+    modern: "You've turned my mourning into dancing — You've taken off my sackcloth and clothed me with joy — so that my heart will sing praise to You and not be silent. Lord my God, I'll give You thanks forever." },
+  { ref: "Nehemiah 8:10", themes:["joy","strength"],
+    moods:{ Grateful:{ reason:"The joy of the Lord is your strength. Gratitude isn't soft — it's the literal source of being able to keep going." } },
+    modern: "Don't be sad — the joy of the Lord is your strength." },
+  { ref: "1 Chronicles 16:34", themes:["thanksgiving","mercy"],
+    moods:{ Grateful:{ reason:"David's instruction at the founding of public worship — give thanks, for He is good, His mercy endures forever. The same refrain shows up everywhere because it's always true." } },
+    modern: "Give thanks to the Lord — He is good — His mercy endures forever." },
+  { ref: "Psalm 34:1-3", themes:["praise","blessing"],
+    moods:{ Grateful:{ reason:"I will bless the LORD at all times. His praise shall continually be in my mouth. A daily, hourly, breath-by-breath commitment." } },
+    modern: "I'll bless the Lord at all times — His praise will continually be in my mouth. My soul will boast in the Lord — the humble will hear it and be glad. Magnify the Lord with me, and let's exalt His name together." },
+  { ref: "Psalm 113:3", themes:["praise","day"],
+    moods:{ Grateful:{ reason:"From the rising of the sun unto its going down, the LORD's name is to be praised. From now until you sleep, gratitude has work to do." } },
+    modern: "From the rising of the sun until its setting, the Lord's name is to be praised." },
+  { ref: "Romans 11:33-36", themes:["wisdom","praise"],
+    moods:{ Grateful:{ reason:"Paul, at the end of eleven dense chapters about salvation, just bursts. The depth of God's riches and wisdom — to Him be glory forever." } },
+    modern: "How deep are the riches both of the wisdom and knowledge of God! How unsearchable are His judgments, and His ways past finding out! For from Him and through Him and to Him are all things — to Him be the glory forever." },
+  { ref: "Psalm 150:6", themes:["praise","breath"],
+    moods:{ Grateful:{ reason:"Let everything that hath breath praise the LORD. The last verse of the Psalter — and the only condition for praising God is being alive." } },
+    modern: "Let everything that has breath praise the Lord. Praise the Lord." },
+  { ref: "2 Corinthians 9:15", themes:["gift","thanks"],
+    moods:{ Grateful:{ reason:"Thanks be unto God for His unspeakable gift. Sometimes the gift is too big for language — gratitude bows where it can't articulate." } },
+    modern: "Thanks be to God for His indescribable gift." },
+  { ref: "Psalm 28:7", themes:["strength","trust","praise"],
+    moods:{ Grateful:{ reason:"The Lord is my strength and my shield — my heart trusts in Him, and I am helped. Therefore my heart greatly rejoices, and with my song I praise Him." } },
+    modern: "The Lord is my strength and my shield. My heart trusts in Him, and I am helped — so my heart leaps for joy, and with my song I praise Him." },
+
+  // ============ ANGRY ===================================================
+  { ref: "Ephesians 4:26-27", themes:["wrath","conflict"],
+    moods:{ Angry:{ reason:"Anger itself isn't sinful — Paul acknowledges that. The warning is what you do with it. Don't let it ferment overnight, and don't give it room to become something darker." } },
+    modern: "Be angry — but don't sin in it. Don't let the sun go down on your anger. Don't give the devil any room to work." },
+  { ref: "James 1:19-20", themes:["wrath","patience","response"],
+    moods:{ Angry:{ reason:"James lays out a discipline: swift to hear, slow to speak, slow to wrath. The wrath of man doesn't produce the righteousness of God — even when our anger feels justified." } },
+    modern: "Listen carefully, friends: every one of us should be quick to listen, slow to speak, and slow to get angry. Because human anger doesn't produce the kind of right living God is after." },
+  { ref: "Proverbs 15:1", themes:["wrath","response","conflict"],
+    moods:{ Angry:{ reason:"Sometimes anger is a response to someone else's anger. This proverb gives you permission to be the one who breaks the cycle — a soft answer instead of matching heat with heat." } },
+    modern: "A gentle answer turns away wrath. But harsh words stir up anger." },
+  { ref: "Proverbs 14:29", themes:["patience","wisdom"],
+    moods:{ Angry:{ reason:"Patience and wisdom travel together. The same restraint that slows your anger lets you see the situation clearly enough to respond well." } },
+    modern: "Someone slow to anger has deep understanding. Someone with a short temper just puts their foolishness on display." },
+  { ref: "Proverbs 16:32", themes:["self-control","strength"],
+    moods:{ Angry:{ reason:"Self-control is harder than conquest. Solomon places the person who rules their own spirit above the mighty warrior — because the inner battle is the harder one." } },
+    modern: "Being slow to anger beats being a great warrior. Ruling your own spirit beats conquering a city." },
+  { ref: "Psalm 37:8", themes:["wrath","release"],
+    moods:{ Angry:{ reason:"Anger pulls you toward action you'll regret. The psalmist's counsel is simple: cease, forsake it, let it go — before it leads you somewhere you don't want to go." } },
+    modern: "Let go of anger. Walk away from rage. Don't worry — it only leads you toward doing harm." },
+  { ref: "Colossians 3:8", themes:["wrath","identity"],
+    moods:{ Angry:{ reason:"Paul names anger alongside things we 'put off' — like clothes we used to wear. Whatever drew anger from you before doesn't have to define you now." } },
+    modern: "Now put off all of these: anger, rage, malice, slander, filthy language coming out of your mouth." },
+  { ref: "Ecclesiastes 7:9", themes:["wrath","wisdom"],
+    moods:{ Angry:{ reason:"A sobering line: anger resteth in the bosom of fools. Not that anger makes you foolish in a moment — but that letting it linger gives it room to settle in." } },
+    modern: "Don't be quick in your spirit to get angry. Anger settles in the bosom of fools." },
+  { ref: "Proverbs 19:11", themes:["wisdom","forgiveness"],
+    moods:{ Angry:{ reason:"Discretion defers anger. Glory is in passing over an offense. Not 'pretending it didn't happen' — choosing not to make it the thing." } },
+    modern: "A person's good sense makes him slow to anger — and it's his glory to overlook an offense." },
+  { ref: "Proverbs 29:11", themes:["self-control","speech"],
+    moods:{ Angry:{ reason:"A fool dumps everything out. A wise person holds it — not forever, but until the response can be wise. There's wisdom in the pause." } },
+    modern: "A fool gives full vent to his anger, but a wise person quietly holds it back." },
+  { ref: "Proverbs 29:22", themes:["wrath","consequences"],
+    moods:{ Angry:{ reason:"An angry person stirs up strife. A furious person multiplies sin. The verse names anger's downstream effects without flinching." } },
+    modern: "An angry person stirs up strife. A hot-tempered person commits much wrongdoing." },
+  { ref: "Proverbs 22:24-25", themes:["company","influence"],
+    moods:{ Angry:{ reason:"Don't befriend an angry person — because you'll catch it. Anger is contagious. The company you keep shapes the temper you carry." } },
+    modern: "Don't make friends with an angry person. Don't keep company with a hot-tempered one — or you'll learn their ways and get a snare for your soul." },
+  { ref: "Proverbs 25:28", themes:["self-control","ruin"],
+    moods:{ Angry:{ reason:"A person without self-control is like a city with broken walls — undefended, vulnerable to anything. Ruling your own spirit is part of being safe." } },
+    modern: "A person without self-control is like a city whose walls are broken down." },
+  { ref: "Matthew 5:21-22", themes:["wrath","heart","judgment"],
+    moods:{ Angry:{ reason:"Jesus takes anger more seriously than we usually do. The heart matters as much as the hand — He's not impressed by 'I didn't actually do anything.'" } },
+    modern: "You've heard 'You shall not murder' — but I tell you, anyone who is angry with his brother without cause will be in danger of judgment." },
+  { ref: "Matthew 5:38-39", themes:["retaliation","response"],
+    moods:{ Angry:{ reason:"The reflex is to hit back. Jesus interrupts the reflex — turn the other cheek. Not weakness, but the strength to break the cycle." } },
+    modern: "You've heard 'an eye for an eye.' But I tell you: don't resist an evil person. If anyone slaps you on the right cheek, turn the other one to him also." },
+  { ref: "Matthew 5:44", themes:["enemies","love","prayer"],
+    moods:{ Angry:{ reason:"Love your enemies. Bless those who curse you. The hardest command in Scripture is also a quiet escape hatch out of resentment." } },
+    modern: "I tell you: love your enemies. Bless those who curse you. Do good to those who hate you. Pray for those who mistreat you and persecute you." },
+  { ref: "Romans 12:17-19", themes:["vengeance","peace"],
+    moods:{ Angry:{ reason:"Don't pay back evil for evil. As much as it depends on you, live at peace. And leave room for God's wrath — it's His to handle, not yours." } },
+    modern: "Don't pay back anyone evil for evil. As far as it depends on you, live at peace with everyone. Don't take revenge, friends — leave room for God's wrath. It's written: vengeance is Mine; I will repay, says the Lord." },
+  { ref: "Romans 12:21", themes:["evil","good","overcoming"],
+    moods:{ Angry:{ reason:"Don't be overcome by evil — overcome evil with good. The verse acknowledges the reality of the evil and then gives you a tool that's stronger." } },
+    modern: "Don't be overcome by evil. Overcome evil with good." },
+  { ref: "Ephesians 4:31-32", themes:["bitterness","kindness","forgiveness"],
+    moods:{ Angry:{ reason:"Paul stacks the things to put away — bitterness, wrath, anger, clamor, evil speaking. Then names what goes in their place — kindness, tender-heartedness, forgiveness." } },
+    modern: "Get rid of all bitterness, rage, anger, harsh words, slander, along with every form of malice. Instead, be kind to each other, tenderhearted, forgiving each other — just as God in Christ forgave you." },
+  { ref: "James 3:14-16", themes:["bitterness","wisdom"],
+    moods:{ Angry:{ reason:"Bitter envy and self-seeking aren't wisdom from above — they're earthly, sensual, demonic. James doesn't soften the language. Where they're at work, confusion follows." } },
+    modern: "If you have bitter envy and selfish ambition in your hearts, don't boast about it or deny the truth. That kind of wisdom doesn't come from above — it's earthly, unspiritual, demonic. Where envy and ambition are, there's disorder and every evil thing." },
+  { ref: "Psalm 4:4", themes:["self-examination","stillness"],
+    moods:{ Angry:{ reason:"Stand in awe — and sin not. Search your heart on your bed and be still. The verse calls for an honest internal reckoning instead of an external outburst." } },
+    modern: "Be angry — and don't sin. Search your heart on your bed, and be still." },
+  { ref: "Galatians 5:19-23", themes:["flesh","spirit","fruit"],
+    moods:{ Angry:{ reason:"Wrath and strife are works of the flesh — but the fruit of the Spirit is love, joy, peace, longsuffering. The contrast names both what you're walking away from and what you're walking toward." } },
+    modern: "The works of the flesh are obvious — sexual immorality, idolatry, hatred, outbursts of anger, selfish ambition, and so on. But the fruit of the Spirit is love, joy, peace, patience, kindness, goodness, faithfulness, gentleness, self-control." },
+  { ref: "1 Peter 3:9", themes:["retaliation","blessing"],
+    moods:{ Angry:{ reason:"Don't return evil for evil. Don't return insult for insult. Instead — bless. You were called to this, and a blessing is what you'll inherit." } },
+    modern: "Don't pay back evil with evil, or insult with insult. Instead, bless — because to this you were called, that you might inherit a blessing." },
+  { ref: "Hebrews 12:14-15", themes:["peace","bitterness"],
+    moods:{ Angry:{ reason:"Pursue peace with everyone — and watch that no root of bitterness springs up. Bitterness, untreated, doesn't just hurt you. It troubles many." } },
+    modern: "Pursue peace with everyone, and the holiness without which no one will see the Lord — watching carefully that no one falls short of God's grace, and that no root of bitterness springs up to cause trouble and defile many." },
+  { ref: "Proverbs 17:14", themes:["conflict","beginning"],
+    moods:{ Angry:{ reason:"The beginning of strife is like releasing water — once it's out, you can't put it back. Walk away before the dam breaks." } },
+    modern: "Starting a quarrel is like opening a floodgate — leave off the dispute before it breaks out." }
+];
+
+// Build the per-mood verse pool at runtime.
+function versesForMood(mood) {
+  const result = [];
+  for (const v of VERSE_LIBRARY) {
+    if (v.moods && v.moods[mood]) {
+      result.push({
+        ref: v.ref,
+        themes: v.themes || [],
+        reason: v.moods[mood].reason,
+        modern: v.modern || ''
+      });
+    }
+  }
+  return result;
+}
 
 const THEME_KEYWORDS = {
   fear:        ["afraid","scared","scary","fear","terrified","panic","anxious","anxiety","worried","worry","nervous"],
@@ -533,7 +865,6 @@ let selectedVerse = null;
 let currentHomeScreen = 'screen-welcome';
 let currentTab = 'home';
 
-// ---- Screen / tab navigation ---------------------------------------------
 const HOME_SCREENS = ['screen-welcome','screen-mood','screen-loading','screen-verses','screen-share'];
 
 function showScreen(id) {
@@ -550,7 +881,14 @@ function showScreen(id) {
 function showTab(tab) {
   currentTab = tab;
   if (tab === 'home') {
-    showScreen(currentHomeScreen);
+    selectedMood = '';
+    selectedVerse = null;
+    document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
+    const ctx = document.getElementById('user-context');
+    if (ctx) ctx.value = '';
+    const moodErr = document.getElementById('mood-error');
+    if (moodErr) moodErr.style.display = 'none';
+    showScreen('screen-mood');
     return;
   }
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -578,7 +916,6 @@ function selectMood(btn, mood) {
   document.getElementById('mood-error').style.display = 'none';
 }
 
-// ---- Intelligence layer --------------------------------------------------
 function detectThemes(text) {
   const lower = (text || '').toLowerCase();
   if (!lower) return [];
@@ -601,12 +938,16 @@ function shuffle(arr) {
 }
 
 function pickThreeVerses(mood, context) {
-  const pool = VERSE_BANK[mood] || [];
+  const pool = versesForMood(mood);
   if (pool.length === 0) return [];
 
+  const recent = new Set(getRecentByMood(mood));
+  let candidates = pool.filter(v => !recent.has(v.ref));
+  if (candidates.length < 3) candidates = pool;
+
   const themes = detectThemes(context);
-  const themed = shuffle(pool.filter(v => (v.themes||[]).some(t => themes.includes(t))));
-  const general = shuffle(pool.filter(v => !themed.includes(v)));
+  const themed = shuffle(candidates.filter(v => (v.themes||[]).some(t => themes.includes(t))));
+  const general = shuffle(candidates.filter(v => !themed.includes(v)));
 
   const picks = [];
   const maxThemed = themes.length > 0 ? Math.min(2, themed.length) : 0;
@@ -617,7 +958,165 @@ function pickThreeVerses(mood, context) {
   return picks;
 }
 
+// Bundled KJV text for every reference in VERSE_LIBRARY. Loaded directly so
+// the app works offline, from file://, and without depending on any external
+// API. bible-api.com is kept only as a fallback for references not in the
+// bundle (so if you add a new verse to the library and forget to add its
+// text here, the app still tries to recover it over the network).
+const VERSE_TEXTS = {
+  "Philippians 4:6-7": "Be careful for nothing; but in every thing by prayer and supplication with thanksgiving let your requests be made known unto God. And the peace of God, which passeth all understanding, shall keep your hearts and minds through Christ Jesus.",
+  "Isaiah 41:10": "Fear thou not; for I am with thee: be not dismayed; for I am thy God: I will strengthen thee; yea, I will help thee; yea, I will uphold thee with the right hand of my righteousness.",
+  "1 Peter 5:7": "Casting all your care upon him; for he careth for you.",
+  "Matthew 6:34": "Take therefore no thought for the morrow: for the morrow shall take thought for the things of itself. Sufficient unto the day is the evil thereof.",
+  "John 14:27": "Peace I leave with you, my peace I give unto you: not as the world giveth, give I unto you. Let not your heart be troubled, neither let it be afraid.",
+  "2 Timothy 1:7": "For God hath not given us the spirit of fear; but of power, and of love, and of a sound mind.",
+  "Psalm 94:19": "In the multitude of my thoughts within me thy comforts delight my soul.",
+  "Proverbs 3:5-6": "Trust in the LORD with all thine heart; and lean not unto thine own understanding. In all thy ways acknowledge him, and he shall direct thy paths.",
+  "Psalm 23:4": "Yea, though I walk through the valley of the shadow of death, I will fear no evil: for thou art with me; thy rod and thy staff they comfort me.",
+  "Psalm 56:3": "What time I am afraid, I will trust in thee.",
+  "Psalm 27:1": "The LORD is my light and my salvation; whom shall I fear? the LORD is the strength of my life; of whom shall I be afraid?",
+  "Psalm 46:1": "God is our refuge and strength, a very present help in trouble.",
+  "Psalm 46:10": "Be still, and know that I am God: I will be exalted among the heathen, I will be exalted in the earth.",
+  "Psalm 121:1-2": "I will lift up mine eyes unto the hills, from whence cometh my help. My help cometh from the LORD, which made heaven and earth.",
+  "Isaiah 26:3": "Thou wilt keep him in perfect peace, whose mind is stayed on thee: because he trusteth in thee.",
+  "Isaiah 43:1-2": "But now thus saith the LORD that created thee, O Jacob, and he that formed thee, O Israel, Fear not: for I have redeemed thee, I have called thee by thy name; thou art mine. When thou passest through the waters, I will be with thee; and through the rivers, they shall not overflow thee: when thou walkest through the fire, thou shalt not be burned; neither shall the flame kindle upon thee.",
+  "Mark 4:39-40": "And he arose, and rebuked the wind, and said unto the sea, Peace, be still. And the wind ceased, and there was a great calm. And he said unto them, Why are ye so fearful? how is it that ye have no faith?",
+  "Hebrews 13:5-6": "Let your conversation be without covetousness; and be content with such things as ye have: for he hath said, I will never leave thee, nor forsake thee. So that we may boldly say, The Lord is my helper, and I will not fear what man shall do unto me.",
+  "Romans 8:38-39": "For I am persuaded, that neither death, nor life, nor angels, nor principalities, nor powers, nor things present, nor things to come, Nor height, nor depth, nor any other creature, shall be able to separate us from the love of God, which is in Christ Jesus our Lord.",
+  "Psalm 4:8": "I will both lay me down in peace, and sleep: for thou, LORD, only makest me dwell in safety.",
+  "Joshua 1:9": "Have not I commanded thee? Be strong and of a good courage; be not afraid, neither be thou dismayed: for the LORD thy God is with thee whithersoever thou goest.",
+  "Psalm 34:4": "I sought the LORD, and he heard me, and delivered me from all my fears.",
+  "Psalm 55:22": "Cast thy burden upon the LORD, and he shall sustain thee: he shall never suffer the righteous to be moved.",
+  "Lamentations 3:25-26": "The LORD is good unto them that wait for him, to the soul that seeketh him. It is good that a man should both hope and quietly wait for the salvation of the LORD.",
+  "Psalm 91:1-2": "He that dwelleth in the secret place of the most High shall abide under the shadow of the Almighty. I will say of the LORD, He is my refuge and my fortress: my God; in him will I trust.",
+  "Deuteronomy 31:6": "Be strong and of a good courage, fear not, nor be afraid of them: for the LORD thy God, he it is that doth go with thee; he will not fail thee, nor forsake thee.",
+  "Psalm 34:18": "The LORD is nigh unto them that are of a broken heart; and saveth such as be of a contrite spirit.",
+  "Matthew 5:4": "Blessed are they that mourn: for they shall be comforted.",
+  "Revelation 21:4": "And God shall wipe away all tears from their eyes; and there shall be no more death, neither sorrow, nor crying, neither shall there be any more pain: for the former things are passed away.",
+  "John 14:1-3": "Let not your heart be troubled: ye believe in God, believe also in me. In my Father's house are many mansions: if it were not so, I would have told you. I go to prepare a place for you. And if I go and prepare a place for you, I will come again, and receive you unto myself; that where I am, there ye may be also.",
+  "Psalm 147:3": "He healeth the broken in heart, and bindeth up their wounds.",
+  "2 Corinthians 1:3-4": "Blessed be God, even the Father of our Lord Jesus Christ, the Father of mercies, and the God of all comfort; Who comforteth us in all our tribulation, that we may be able to comfort them which are in any trouble, by the comfort wherewith we ourselves are comforted of God.",
+  "John 11:25-26": "Jesus said unto her, I am the resurrection, and the life: he that believeth in me, though he were dead, yet shall he live: And whosoever liveth and believeth in me shall never die. Believest thou this?",
+  "Lamentations 3:22-23": "It is of the LORD's mercies that we are not consumed, because his compassions fail not. They are new every morning: great is thy faithfulness.",
+  "Psalm 30:5": "For his anger endureth but a moment; in his favour is life: weeping may endure for a night, but joy cometh in the morning.",
+  "Psalm 56:8": "Thou tellest my wanderings: put thou my tears into thy bottle: are they not in thy book?",
+  "Isaiah 53:3-4": "He is despised and rejected of men; a man of sorrows, and acquainted with grief: and we hid as it were our faces from him; he was despised, and we esteemed him not. Surely he hath borne our griefs, and carried our sorrows: yet we did esteem him stricken, smitten of God, and afflicted.",
+  "Isaiah 61:1-3": "The Spirit of the Lord GOD is upon me; because the LORD hath anointed me to preach good tidings unto the meek; he hath sent me to bind up the brokenhearted, to proclaim liberty to the captives, and the opening of the prison to them that are bound; To proclaim the acceptable year of the LORD, and the day of vengeance of our God; to comfort all that mourn; To appoint unto them that mourn in Zion, to give unto them beauty for ashes, the oil of joy for mourning, the garment of praise for the spirit of heaviness; that they might be called trees of righteousness, the planting of the LORD, that he might be glorified.",
+  "Job 1:21": "And said, Naked came I out of my mother's womb, and naked shall I return thither: the LORD gave, and the LORD hath taken away; blessed be the name of the LORD.",
+  "1 Thessalonians 4:13-14": "But I would not have you to be ignorant, brethren, concerning them which are asleep, that ye sorrow not, even as others which have no hope. For if we believe that Jesus died and rose again, even so them also which sleep in Jesus will God bring with him.",
+  "1 Corinthians 15:55-57": "O death, where is thy sting? O grave, where is thy victory? The sting of death is sin; and the strength of sin is the law. But thanks be to God, which giveth us the victory through our Lord Jesus Christ.",
+  "Psalm 116:15": "Precious in the sight of the LORD is the death of his saints.",
+  "John 16:22": "And ye now therefore have sorrow: but I will see you again, and your heart shall rejoice, and your joy no man taketh from you.",
+  "2 Corinthians 4:17-18": "For our light affliction, which is but for a moment, worketh for us a far more exceeding and eternal weight of glory; While we look not at the things which are seen, but at the things which are not seen: for the things which are seen are temporal; but the things which are not seen are eternal.",
+  "Job 19:25-26": "For I know that my redeemer liveth, and that he shall stand at the latter day upon the earth: And though after my skin worms destroy this body, yet in my flesh shall I see God.",
+  "Isaiah 25:8": "He will swallow up death in victory; and the Lord GOD will wipe away tears from off all faces; and the rebuke of his people shall he take away from off all the earth: for the LORD hath spoken it.",
+  "Psalm 42:11": "Why art thou cast down, O my soul? and why art thou disquieted within me? hope thou in God: for I shall yet praise him, who is the health of my countenance, and my God.",
+  "Hebrews 4:15-16": "For we have not an high priest which cannot be touched with the feeling of our infirmities; but was in all points tempted like as we are, yet without sin. Let us therefore come boldly unto the throne of grace, that we may obtain mercy, and find grace to help in time of need.",
+  "Jeremiah 29:11": "For I know the thoughts that I think toward you, saith the LORD, thoughts of peace, and not of evil, to give you an expected end.",
+  "Romans 15:13": "Now the God of hope fill you with all joy and peace in believing, that ye may abound in hope, through the power of the Holy Ghost.",
+  "Romans 8:28": "And we know that all things work together for good to them that love God, to them who are the called according to his purpose.",
+  "Isaiah 40:31": "But they that wait upon the LORD shall renew their strength; they shall mount up with wings as eagles; they shall run, and not be weary; and they shall walk, and not faint.",
+  "Hebrews 11:1": "Now faith is the substance of things hoped for, the evidence of things not seen.",
+  "1 Peter 1:3": "Blessed be the God and Father of our Lord Jesus Christ, which according to his abundant mercy hath begotten us again unto a lively hope by the resurrection of Jesus Christ from the dead.",
+  "Psalm 27:14": "Wait on the LORD: be of good courage, and he shall strengthen thine heart: wait, I say, on the LORD.",
+  "Romans 5:3-5": "And not only so, but we glory in tribulations also: knowing that tribulation worketh patience; And patience, experience; and experience, hope: And hope maketh not ashamed; because the love of God is shed abroad in our hearts by the Holy Ghost which is given unto us.",
+  "Psalm 33:18": "Behold, the eye of the LORD is upon them that fear him, upon them that hope in his mercy.",
+  "Psalm 71:14": "But I will hope continually, and will yet praise thee more and more.",
+  "Proverbs 23:18": "For surely there is an end; and thine expectation shall not be cut off.",
+  "Romans 12:12": "Rejoicing in hope; patient in tribulation; continuing instant in prayer.",
+  "Hebrews 6:19": "Which hope we have as an anchor of the soul, both sure and stedfast, and which entereth into that within the veil.",
+  "Hebrews 10:23": "Let us hold fast the profession of our faith without wavering; (for he is faithful that promised;)",
+  "Titus 2:13": "Looking for that blessed hope, and the glorious appearing of the great God and our Saviour Jesus Christ.",
+  "2 Corinthians 4:8-9": "We are troubled on every side, yet not distressed; we are perplexed, but not in despair; Persecuted, but not forsaken; cast down, but not destroyed.",
+  "Romans 4:18": "Who against hope believed in hope, that he might become the father of many nations; according to that which was spoken, So shall thy seed be.",
+  "Isaiah 43:18-19": "Remember ye not the former things, neither consider the things of old. Behold, I will do a new thing; now it shall spring forth; shall ye not know it? I will even make a way in the wilderness, and rivers in the desert.",
+  "Lamentations 3:24": "The LORD is my portion, saith my soul; therefore will I hope in him.",
+  "Micah 7:7": "Therefore I will look unto the LORD; I will wait for the God of my salvation: my God will hear me.",
+  "Colossians 1:27": "To whom God would make known what is the riches of the glory of this mystery among the Gentiles; which is Christ in you, the hope of glory:",
+  "Psalm 31:24": "Be of good courage, and he shall strengthen your heart, all ye that hope in the LORD.",
+  "Psalm 119:105": "Thy word is a lamp unto my feet, and a light unto my path.",
+  "John 14:6": "Jesus saith unto him, I am the way, the truth, and the life: no man cometh unto the Father, but by me.",
+  "Psalm 32:8": "I will instruct thee and teach thee in the way which thou shalt go: I will guide thee with mine eye.",
+  "James 1:5": "If any of you lack wisdom, let him ask of God, that giveth to all men liberally, and upbraideth not; and it shall be given him.",
+  "Isaiah 30:21": "And thine ears shall hear a word behind thee, saying, This is the way, walk ye in it, when ye turn to the right hand, and when ye turn to the left.",
+  "Luke 15:4-6": "What man of you, having an hundred sheep, if he lose one of them, doth not leave the ninety and nine in the wilderness, and go after that which is lost, until he find it? And when he hath found it, he layeth it on his shoulders, rejoicing. And when he cometh home, he calleth together his friends and neighbours, saying unto them, Rejoice with me; for I have found my sheep which was lost.",
+  "Psalm 23:1-3": "The LORD is my shepherd; I shall not want. He maketh me to lie down in green pastures: he leadeth me beside the still waters. He restoreth my soul: he leadeth me in the paths of righteousness for his name's sake.",
+  "Jeremiah 33:3": "Call unto me, and I will answer thee, and shew thee great and mighty things, which thou knowest not.",
+  "Jeremiah 29:13": "And ye shall seek me, and find me, when ye shall search for me with all your heart.",
+  "Matthew 7:7-8": "Ask, and it shall be given you; seek, and ye shall find; knock, and it shall be opened unto you: For every one that asketh receiveth; and he that seeketh findeth; and to him that knocketh it shall be opened.",
+  "Matthew 11:28-30": "Come unto me, all ye that labour and are heavy laden, and I will give you rest. Take my yoke upon you, and learn of me; for I am meek and lowly in heart: and ye shall find rest unto your souls. For my yoke is easy, and my burden is light.",
+  "Psalm 25:4-5": "Shew me thy ways, O LORD; teach me thy paths. Lead me in thy truth, and teach me: for thou art the God of my salvation; on thee do I wait all the day.",
+  "Psalm 73:23-24": "Nevertheless I am continually with thee: thou hast holden me by my right hand. Thou shalt guide me with thy counsel, and afterward receive me to glory.",
+  "Psalm 139:23-24": "Search me, O God, and know my heart: try me, and know my thoughts: And see if there be any wicked way in me, and lead me in the way everlasting.",
+  "Proverbs 16:9": "A man's heart deviseth his way: but the LORD directeth his steps.",
+  "Romans 8:14": "For as many as are led by the Spirit of God, they are the sons of God.",
+  "Ephesians 2:10": "For we are his workmanship, created in Christ Jesus unto good works, which God hath before ordained that we should walk in them.",
+  "1 Corinthians 2:9": "But as it is written, Eye hath not seen, nor ear heard, neither have entered into the heart of man, the things which God hath prepared for them that love him.",
+  "Isaiah 55:8-9": "For my thoughts are not your thoughts, neither are your ways my ways, saith the LORD. For as the heavens are higher than the earth, so are my ways higher than your ways, and my thoughts than your thoughts.",
+  "Psalm 16:11": "Thou wilt shew me the path of life: in thy presence is fulness of joy; at thy right hand there are pleasures for evermore.",
+  "Psalm 25:9": "The meek will he guide in judgment: and the meek will he teach his way.",
+  "Hebrews 12:1-2": "Wherefore seeing we also are compassed about with so great a cloud of witnesses, let us lay aside every weight, and the sin which doth so easily beset us, and let us run with patience the race that is set before us, Looking unto Jesus the author and finisher of our faith; who for the joy that was set before him endured the cross, despising the shame, and is set down at the right hand of the throne of God.",
+  "Philippians 3:13-14": "Brethren, I count not myself to have apprehended: but this one thing I do, forgetting those things which are behind, and reaching forth unto those things which are before, I press toward the mark for the prize of the high calling of God in Christ Jesus.",
+  "Galatians 5:25": "If we live in the Spirit, let us also walk in the Spirit.",
+  "John 10:27": "My sheep hear my voice, and I know them, and they follow me.",
+  "Psalm 100:4-5": "Enter into his gates with thanksgiving, and into his courts with praise: be thankful unto him, and bless his name. For the LORD is good; his mercy is everlasting; and his truth endureth to all generations.",
+  "1 Thessalonians 5:16-18": "Rejoice evermore. Pray without ceasing. In every thing give thanks: for this is the will of God in Christ Jesus concerning you.",
+  "Philippians 4:4": "Rejoice in the Lord alway: and again I say, Rejoice.",
+  "Psalm 118:24": "This is the day which the LORD hath made; we will rejoice and be glad in it.",
+  "James 1:17": "Every good gift and every perfect gift is from above, and cometh down from the Father of lights, with whom is no variableness, neither shadow of turning.",
+  "Psalm 107:1": "O give thanks unto the LORD, for he is good: for his mercy endureth for ever.",
+  "Ephesians 5:20": "Giving thanks always for all things unto God and the Father in the name of our Lord Jesus Christ.",
+  "Psalm 9:1": "I will praise thee, O LORD, with my whole heart; I will shew forth all thy marvellous works.",
+  "Psalm 103:1-2": "Bless the LORD, O my soul: and all that is within me, bless his holy name. Bless the LORD, O my soul, and forget not all his benefits.",
+  "Psalm 95:1-2": "O come, let us sing unto the LORD: let us make a joyful noise to the rock of our salvation. Let us come before his presence with thanksgiving, and make a joyful noise unto him with psalms.",
+  "Psalm 136:1": "O give thanks unto the LORD; for he is good: for his mercy endureth for ever.",
+  "Colossians 3:15-17": "And let the peace of God rule in your hearts, to the which also ye are called in one body; and be ye thankful. Let the word of Christ dwell in you richly in all wisdom; teaching and admonishing one another in psalms and hymns and spiritual songs, singing with grace in your hearts to the Lord. And whatsoever ye do in word or deed, do all in the name of the Lord Jesus, giving thanks to God and the Father by him.",
+  "Colossians 2:6-7": "As ye have therefore received Christ Jesus the Lord, so walk ye in him: Rooted and built up in him, and stablished in the faith, as ye have been taught, abounding therein with thanksgiving.",
+  "Psalm 92:1-2": "It is a good thing to give thanks unto the LORD, and to sing praises unto thy name, O most High: To shew forth thy lovingkindness in the morning, and thy faithfulness every night.",
+  "Psalm 145:1-3": "I will extol thee, my God, O king; and I will bless thy name for ever and ever. Every day will I bless thee; and I will praise thy name for ever and ever. Great is the LORD, and greatly to be praised; and his greatness is unsearchable.",
+  "Hebrews 13:15": "By him therefore let us offer the sacrifice of praise to God continually, that is, the fruit of our lips giving thanks to his name.",
+  "Psalm 30:11-12": "Thou hast turned for me my mourning into dancing: thou hast put off my sackcloth, and girded me with gladness; To the end that my glory may sing praise to thee, and not be silent. O LORD my God, I will give thanks unto thee for ever.",
+  "Nehemiah 8:10": "Then he said unto them, Go your way, eat the fat, and drink the sweet, and send portions unto them for whom nothing is prepared: for this day is holy unto our Lord: neither be ye sorry; for the joy of the LORD is your strength.",
+  "1 Chronicles 16:34": "O give thanks unto the LORD; for he is good; for his mercy endureth for ever.",
+  "Psalm 34:1-3": "I will bless the LORD at all times: his praise shall continually be in my mouth. My soul shall make her boast in the LORD: the humble shall hear thereof, and be glad. O magnify the LORD with me, and let us exalt his name together.",
+  "Psalm 113:3": "From the rising of the sun unto the going down of the same the LORD's name is to be praised.",
+  "Romans 11:33-36": "O the depth of the riches both of the wisdom and knowledge of God! how unsearchable are his judgments, and his ways past finding out! For who hath known the mind of the Lord? or who hath been his counsellor? Or who hath first given to him, and it shall be recompensed unto him again? For of him, and through him, and to him, are all things: to whom be glory for ever. Amen.",
+  "Psalm 150:6": "Let every thing that hath breath praise the LORD. Praise ye the LORD.",
+  "2 Corinthians 9:15": "Thanks be unto God for his unspeakable gift.",
+  "Psalm 28:7": "The LORD is my strength and my shield; my heart trusted in him, and I am helped: therefore my heart greatly rejoiceth; and with my song will I praise him.",
+  "Ephesians 4:26-27": "Be ye angry, and sin not: let not the sun go down upon your wrath: Neither give place to the devil.",
+  "James 1:19-20": "Wherefore, my beloved brethren, let every man be swift to hear, slow to speak, slow to wrath: For the wrath of man worketh not the righteousness of God.",
+  "Proverbs 15:1": "A soft answer turneth away wrath: but grievous words stir up anger.",
+  "Proverbs 14:29": "He that is slow to wrath is of great understanding: but he that is hasty of spirit exalteth folly.",
+  "Proverbs 16:32": "He that is slow to anger is better than the mighty; and he that ruleth his spirit than he that taketh a city.",
+  "Psalm 37:8": "Cease from anger, and forsake wrath: fret not thyself in any wise to do evil.",
+  "Colossians 3:8": "But now ye also put off all these; anger, wrath, malice, blasphemy, filthy communication out of your mouth.",
+  "Ecclesiastes 7:9": "Be not hasty in thy spirit to be angry: for anger resteth in the bosom of fools.",
+  "Proverbs 19:11": "The discretion of a man deferreth his anger; and it is his glory to pass over a transgression.",
+  "Proverbs 29:11": "A fool uttereth all his mind: but a wise man keepeth it in till afterwards.",
+  "Proverbs 29:22": "An angry man stirreth up strife, and a furious man aboundeth in transgression.",
+  "Proverbs 22:24-25": "Make no friendship with an angry man; and with a furious man thou shalt not go: Lest thou learn his ways, and get a snare to thy soul.",
+  "Proverbs 25:28": "He that hath no rule over his own spirit is like a city that is broken down, and without walls.",
+  "Matthew 5:21-22": "Ye have heard that it was said by them of old time, Thou shalt not kill; and whosoever shall kill shall be in danger of the judgment: But I say unto you, That whosoever is angry with his brother without a cause shall be in danger of the judgment: and whosoever shall say to his brother, Raca, shall be in danger of the council: but whosoever shall say, Thou fool, shall be in danger of hell fire.",
+  "Matthew 5:38-39": "Ye have heard that it hath been said, An eye for an eye, and a tooth for a tooth: But I say unto you, That ye resist not evil: but whosoever shall smite thee on thy right cheek, turn to him the other also.",
+  "Matthew 5:44": "But I say unto you, Love your enemies, bless them that curse you, do good to them that hate you, and pray for them which despitefully use you, and persecute you;",
+  "Romans 12:17-19": "Recompense to no man evil for evil. Provide things honest in the sight of all men. If it be possible, as much as lieth in you, live peaceably with all men. Dearly beloved, avenge not yourselves, but rather give place unto wrath: for it is written, Vengeance is mine; I will repay, saith the Lord.",
+  "Romans 12:21": "Be not overcome of evil, but overcome evil with good.",
+  "Ephesians 4:31-32": "Let all bitterness, and wrath, and anger, and clamour, and evil speaking, be put away from you, with all malice: And be ye kind one to another, tenderhearted, forgiving one another, even as God for Christ's sake hath forgiven you.",
+  "James 3:14-16": "But if ye have bitter envying and strife in your hearts, glory not, and lie not against the truth. This wisdom descendeth not from above, but is earthly, sensual, devilish. For where envying and strife is, there is confusion and every evil work.",
+  "Psalm 4:4": "Stand in awe, and sin not: commune with your own heart upon your bed, and be still. Selah.",
+  "Galatians 5:19-23": "Now the works of the flesh are manifest, which are these; Adultery, fornication, uncleanness, lasciviousness, Idolatry, witchcraft, hatred, variance, emulations, wrath, strife, seditions, heresies, Envyings, murders, drunkenness, revellings, and such like: of the which I tell you before, as I have also told you in time past, that they which do such things shall not inherit the kingdom of God. But the fruit of the Spirit is love, joy, peace, longsuffering, gentleness, goodness, faith, Meekness, temperance: against such there is no law.",
+  "1 Peter 3:9": "Not rendering evil for evil, or railing for railing: but contrariwise blessing; knowing that ye are thereunto called, that ye should inherit a blessing.",
+  "Hebrews 12:14-15": "Follow peace with all men, and holiness, without which no man shall see the Lord: Looking diligently lest any man fail of the grace of God; lest any root of bitterness springing up trouble you, and thereby many be defiled.",
+  "Proverbs 17:14": "The beginning of strife is as when one letteth out water: therefore leave off contention, before it be meddled with."
+};
+
 async function fetchVerseText(reference) {
+  // Bundled-first: instant, offline-capable, no external dependency.
+  if (VERSE_TEXTS[reference]) {
+    return { reference, text: VERSE_TEXTS[reference] };
+  }
+  // Fallback for refs not in the bundle (e.g. ones you add later).
   const encoded = encodeURIComponent(reference);
   const res = await fetch(`https://bible-api.com/${encoded}?translation=kjv`);
   if (!res.ok) throw new Error(`Could not reach Bible API for "${reference}"`);
@@ -655,13 +1154,33 @@ async function getVerses() {
     const chosen = pickThreeVerses(selectedMood, context);
     if (chosen.length === 0) throw new Error('No verses available for this mood.');
 
-    const fetchPromise = Promise.all(chosen.map(async (v) => {
+    // Fetch all 3 in parallel but tolerate individual failures. A single bad
+    // reference (e.g. one that bible-api.com can't resolve) used to kill the
+    // entire batch — now we just drop it and show whatever loaded.
+    const fetchPromise = Promise.allSettled(chosen.map(async (v) => {
       const scripture = await fetchVerseText(v.ref);
-      return { reference: scripture.reference, text: scripture.text, reason: v.reason };
+      return {
+        reference: scripture.reference,
+        text: scripture.text,
+        reason: v.reason,
+        modern: v.modern || ''
+      };
     }));
     const minDelay = new Promise(r => setTimeout(r, 1400));
 
-    const [fetched] = await Promise.all([fetchPromise, minDelay]);
+    const [settled] = await Promise.all([fetchPromise, minDelay]);
+    const fetched = settled.filter(r => r.status === 'fulfilled').map(r => r.value);
+    const failedRefs = settled
+      .map((r, i) => r.status === 'rejected' ? { ref: chosen[i].ref, err: r.reason && r.reason.message } : null)
+      .filter(Boolean);
+    if (failedRefs.length) {
+      console.warn('Shepherd: some verses failed to load:', failedRefs);
+    }
+    if (fetched.length === 0) {
+      throw new Error('All verse fetches failed. Failed refs: ' + failedRefs.map(f => f.ref).join(', '));
+    }
+
+    markVersesSeen(selectedMood, chosen.map(v => v.ref));
 
     clearInterval(msgTimer);
     renderVerses(fetched);
@@ -673,7 +1192,7 @@ async function getVerses() {
     document.getElementById('verses-container').innerHTML = '';
     const errDiv = document.getElementById('verses-error');
     errDiv.style.display = 'block';
-    errDiv.textContent = 'Something went wrong loading your verses. Please check your connection and try again.';
+    errDiv.textContent = "Couldn't load verses right now. Open your browser's developer console (right-click → Inspect → Console) to see what failed, and try again.";
   }
 }
 
@@ -691,7 +1210,6 @@ function renderVerses(verses) {
     const actions = document.createElement('div');
     actions.className = 'verse-actions';
 
-    // Save (bookmark) button
     const saveBtn = document.createElement('button');
     saveBtn.className = 'verse-action-btn';
     saveBtn.setAttribute('aria-label', 'Save this verse');
@@ -715,14 +1233,20 @@ function renderVerses(verses) {
       updateSaveBtn();
     };
 
-    // Share button
+    // Write-about (journal) button
+    const journalBtn = document.createElement('button');
+    journalBtn.className = 'verse-action-btn';
+    journalBtn.setAttribute('aria-label', 'Write about this verse in your journal');
+    journalBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z" stroke="#3B6D11" stroke-width="1.7" stroke-linejoin="round"/><path d="M20.71 7.04a.996.996 0 0 0 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" stroke="#3B6D11" stroke-width="1.7" stroke-linejoin="round"/></svg>';
+    journalBtn.onclick = (e) => { e.stopPropagation(); writeAboutVerse(v); };
+
     const shareBtn = document.createElement('button');
     shareBtn.className = 'verse-action-btn';
     shareBtn.setAttribute('aria-label', 'Share this verse');
     shareBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7" stroke="#3B6D11" stroke-width="2" stroke-linecap="round"/><path d="M16 6l-4-4-4 4" stroke="#3B6D11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="12" y1="2" x2="12" y2="15" stroke="#3B6D11" stroke-width="2" stroke-linecap="round"/></svg>';
     shareBtn.onclick = (e) => { e.stopPropagation(); openShareSheet(v); };
 
-    actions.append(saveBtn, shareBtn);
+    actions.append(saveBtn, journalBtn, shareBtn);
 
     const ref = document.createElement('div');
     ref.className = 'verse-ref';
@@ -736,7 +1260,28 @@ function renderVerses(verses) {
     const reason = document.createElement('div');
     reason.className = 'verse-reason';
     reason.textContent = v.reason;
+
     card.append(actions, ref, text, reasonLabel, reason);
+
+    // Modern paraphrase toggle (collapsed by default)
+    if (v.modern) {
+      const toggle = document.createElement('button');
+      toggle.className = 'verse-modern-toggle';
+      toggle.textContent = 'Read in modern terms ›';
+      const modernSection = document.createElement('div');
+      modernSection.className = 'verse-modern';
+      const modernText = document.createElement('div');
+      modernText.className = 'verse-modern-text';
+      modernText.textContent = v.modern;
+      modernSection.append(modernText);
+      toggle.onclick = (e) => {
+        e.stopPropagation();
+        const open = modernSection.classList.toggle('show');
+        toggle.textContent = open ? 'Hide modern terms ‹' : 'Read in modern terms ›';
+      };
+      card.append(toggle, modernSection);
+    }
+
     card.onclick = () => {
       document.querySelectorAll('.verse-card').forEach(c => c.classList.remove('selected'));
       card.classList.add('selected');
@@ -754,9 +1299,11 @@ function goToShare() {
   showScreen('screen-share');
 }
 
-// ---- localStorage helpers (saved verses + journal) -----------------------
+// ---- localStorage helpers ------------------------------------------------
 const SAVED_KEY = 'shepherd.savedVerses.v1';
 const JOURNAL_KEY = 'shepherd.journal.v1';
+const RECENT_KEY = 'shepherd.recentVerses.v1';
+const RECENT_LIMIT_PER_MOOD = 5;
 
 function lsLoad(key, fallback) {
   try { return JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback)); }
@@ -764,6 +1311,18 @@ function lsLoad(key, fallback) {
 }
 function lsSave(key, value) {
   try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) { console.warn('localStorage save failed', e); }
+}
+
+function getRecentByMood(mood) {
+  const all = lsLoad(RECENT_KEY, {});
+  return Array.isArray(all[mood]) ? all[mood] : [];
+}
+function markVersesSeen(mood, refs) {
+  const all = lsLoad(RECENT_KEY, {});
+  const existing = Array.isArray(all[mood]) ? all[mood] : [];
+  const merged = [...refs, ...existing.filter(r => !refs.includes(r))];
+  all[mood] = merged.slice(0, RECENT_LIMIT_PER_MOOD);
+  lsSave(RECENT_KEY, all);
 }
 
 function getSavedVerses() { return lsLoad(SAVED_KEY, []); }
@@ -775,6 +1334,7 @@ function saveVerse(v) {
     reference: v.reference,
     text: v.text,
     reason: v.reason,
+    modern: v.modern || '',
     mood: selectedMood || '',
     savedAt: Date.now()
   });
@@ -811,7 +1371,6 @@ function formatDate(ts) {
   return months[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
 }
 
-// ---- Saved verses screen --------------------------------------------------
 function renderSavedVerses() {
   const container = document.getElementById('saved-container');
   const empty = document.getElementById('saved-empty');
@@ -837,13 +1396,19 @@ function renderSavedVerses() {
       renderSavedVerses();
     };
 
+    const journalBtn = document.createElement('button');
+    journalBtn.className = 'verse-action-btn';
+    journalBtn.setAttribute('aria-label', 'Write about this verse in your journal');
+    journalBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z" stroke="#3B6D11" stroke-width="1.7" stroke-linejoin="round"/><path d="M20.71 7.04a.996.996 0 0 0 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" stroke="#3B6D11" stroke-width="1.7" stroke-linejoin="round"/></svg>';
+    journalBtn.onclick = () => writeAboutVerse(v);
+
     const shareBtn = document.createElement('button');
     shareBtn.className = 'verse-action-btn';
     shareBtn.setAttribute('aria-label', 'Share this verse');
     shareBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7" stroke="#3B6D11" stroke-width="2" stroke-linecap="round"/><path d="M16 6l-4-4-4 4" stroke="#3B6D11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="12" y1="2" x2="12" y2="15" stroke="#3B6D11" stroke-width="2" stroke-linecap="round"/></svg>';
     shareBtn.onclick = () => openShareSheet(v);
 
-    actions.append(unsaveBtn, shareBtn);
+    actions.append(unsaveBtn, journalBtn, shareBtn);
 
     const ref = document.createElement('div');
     ref.className = 'saved-item-ref';
@@ -859,11 +1424,28 @@ function renderSavedVerses() {
     meta.textContent = moodStr + 'Saved ' + formatDate(v.savedAt);
 
     item.append(actions, ref, text, meta);
+
+    if (v.modern) {
+      const toggle = document.createElement('button');
+      toggle.className = 'verse-modern-toggle';
+      toggle.textContent = 'Read in modern terms ›';
+      const modernSection = document.createElement('div');
+      modernSection.className = 'verse-modern';
+      const modernText = document.createElement('div');
+      modernText.className = 'verse-modern-text';
+      modernText.textContent = v.modern;
+      modernSection.append(modernText);
+      toggle.onclick = () => {
+        const open = modernSection.classList.toggle('show');
+        toggle.textContent = open ? 'Hide modern terms ‹' : 'Read in modern terms ›';
+      };
+      item.append(toggle, modernSection);
+    }
+
     container.appendChild(item);
   });
 }
 
-// ---- Journal --------------------------------------------------------------
 let editingJournalId = null;
 
 function renderJournalList() {
@@ -889,7 +1471,7 @@ function renderJournalList() {
   });
 }
 
-function openJournalEditor(id) {
+function openJournalEditor(id, initialText) {
   editingJournalId = id;
   const editScreen = document.getElementById('screen-journal-edit');
   const textarea = document.getElementById('journal-edit-text');
@@ -904,15 +1486,33 @@ function openJournalEditor(id) {
       deleteBtn.style.display = 'block';
     }
   } else {
-    textarea.value = '';
+    textarea.value = initialText || '';
     dateLabel.textContent = formatDate(Date.now());
     deleteBtn.style.display = 'none';
   }
 
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   editScreen.classList.add('active');
+  currentTab = 'journal';
+  updateNavTabs();
   window.scrollTo(0, 0);
-  setTimeout(() => textarea.focus(), 50);
+  // Place the cursor after the pre-loaded verse so the user can start writing
+  // their own reflection right away.
+  setTimeout(() => {
+    textarea.focus();
+    const len = textarea.value.length;
+    try { textarea.setSelectionRange(len, len); } catch (e) {}
+  }, 50);
+}
+
+// Opens the journal editor pre-loaded with a verse the user wants to write
+// about. The verse goes at the top, with a blank line below for the
+// reflection so the user can start typing immediately.
+function writeAboutVerse(verse) {
+  const seed = verse.reference + '\n\n' +
+               '"' + verse.text + '"' + '\n\n' +
+               '— My reflection —\n';
+  openJournalEditor(null, seed);
 }
 
 function closeJournalEditor() {
@@ -923,17 +1523,12 @@ function closeJournalEditor() {
 function saveJournalEntry() {
   const text = document.getElementById('journal-edit-text').value.trim();
   if (!text) {
-    if (editingJournalId) {
-      deleteJournalEntryById(editingJournalId);
-    }
+    if (editingJournalId) deleteJournalEntryById(editingJournalId);
     closeJournalEditor();
     return;
   }
-  if (editingJournalId) {
-    upsertJournalEntry({ id: editingJournalId, text });
-  } else {
-    upsertJournalEntry({ text });
-  }
+  if (editingJournalId) upsertJournalEntry({ id: editingJournalId, text });
+  else upsertJournalEntry({ text });
   showToast('Saved ✓');
   closeJournalEditor();
 }
@@ -946,7 +1541,7 @@ function deleteCurrentJournalEntry() {
   closeJournalEditor();
 }
 
-// ---- Share flow (image generation + native share) -----------------------
+// ---- Share flow -----------------------------------------------------------
 let pendingShareVerse = null;
 
 function openShareSheet(verse) {
@@ -1037,7 +1632,6 @@ async function doShare(format) {
   }
 }
 
-// ---- Image generation (HTML Canvas) --------------------------------------
 async function generateVerseImage(verse, format) {
   const W = 1080;
   const H = format === 'story' ? 1920 : 1350;
